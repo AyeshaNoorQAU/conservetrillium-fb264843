@@ -111,12 +111,12 @@ export function Team() {
                 Quaid-i-Azam University
               </p>
               <p className="mt-5 text-muted-foreground leading-relaxed text-[15px]">
-                Though not a part of the project team, this work would not
-                exist without the quiet mentorship, scholarly rigour, and
-                patient guidance of my supervisor. His belief in
-                ethnobotanical research and his unwavering encouragement have
-                shaped every chapter of this journey. I remain forever
-                grateful for the opportunity to learn under his care.
+                With profound gratitude, I dedicate this work to my esteemed
+                supervisor, whose scholarly wisdom and gentle mentorship have
+                been a guiding light throughout my research journey. His
+                patience, vision, and unwavering belief in ethnobotanical
+                science have shaped every step of this endeavour. It is a
+                privilege to learn under his care.
               </p>
             </div>
             <div className="lg:col-span-3 lg:text-right">
