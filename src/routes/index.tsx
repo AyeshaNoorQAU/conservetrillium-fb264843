@@ -44,6 +44,7 @@ function Index() {
         <Field />
         <Science />
         <Help />
+        <Team />
         <Contact />
       </main>
       <Footer />
