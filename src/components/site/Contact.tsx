@@ -72,7 +72,7 @@ export function Contact() {
               Department
             </div>
             <div className="mt-1 text-foreground text-base leading-snug">
-              Department of Botany,<br />
+              Department of Plant Sciences,<br />
               Quaid-i-Azam University, Islamabad
             </div>
           </div>

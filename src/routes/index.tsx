@@ -7,6 +7,7 @@ import { Impact } from "@/components/site/Impact";
 import { Field } from "@/components/site/Field";
 import { Science } from "@/components/site/Science";
 import { Help } from "@/components/site/Help";
+import { Team } from "@/components/site/Team";
 import { Contact } from "@/components/site/Contact";
 import { Footer } from "@/components/site/Footer";
 
@@ -44,6 +45,7 @@ function Index() {
         <Field />
         <Science />
         <Help />
+        <Team />
         <Contact />
       </main>
       <Footer />
