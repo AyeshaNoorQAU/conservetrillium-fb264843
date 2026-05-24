@@ -16,7 +16,7 @@ export function Footer() {
         <p className="text-xs text-muted-foreground text-center md:text-right max-w-md">
           A conservation initiative of the Pakistan Museum of Natural History,
           supported by the Mohamed bin Zayed Species Conservation Fund (MBZ /
-          ISCF). Photography by Syed Munir Hussain.
+          ISCF). Photography by Syed Munir Hussain &amp; Mr. Sabih-ul-Hassan.
         </p>
 
         <p className="text-xs text-muted-foreground">

@@ -1,4 +1,6 @@
 import { Mail, Award, ExternalLink, GraduationCap } from "lucide-react";
+import rizwana from "@/assets/people/rg-rizwana.jpg";
+import mushtaq from "@/assets/people/rg-mushtaq.jpg";
 
 const team = [
   {
@@ -6,19 +8,24 @@ const team = [
     role: "Project Director (PD) — Co-Author",
     email: "rizvana.khan@gmail.com",
     researchgate: "https://www.researchgate.net/profile/Rizwana-Khanum-3",
+    photo: rizwana,
+    initials: "RK",
     lead: true,
   },
   {
     name: "Dr. Amir Hussain",
     role: "Assistant in Project Activities, PMNH",
+    initials: "AH",
   },
   {
     name: "Syed Munir Hussain",
     role: "Sr. Collection In-Charge, PMNH",
+    initials: "SM",
   },
   {
     name: "Mr. Sabih-ul-Hassan",
     role: "Project-Recruited Field Worker",
+    initials: "SH",
   },
 ];
 
@@ -26,7 +33,7 @@ export function Team() {
   return (
     <section id="team" className="relative py-28 lg:py-40 bg-secondary/20">
       <div className="mx-auto max-w-7xl px-6 lg:px-10">
-        <div className="max-w-3xl mb-16">
+        <div className="max-w-3xl mb-16 fade-up">
           <p className="text-xs uppercase tracking-[0.3em] text-accent mb-6">
             With gratitude
           </p>
@@ -43,13 +50,14 @@ export function Team() {
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {team.map((m) => (
+          {team.map((m, i) => (
             <div
               key={m.name}
-              className={`group relative p-7 rounded-2xl border transition-all ${
+              style={{ animationDelay: `${i * 0.12}s` }}
+              className={`fade-up group relative p-7 rounded-2xl border transition-all duration-500 hover:-translate-y-1 ${
                 m.lead
                   ? "bg-card border-primary/40 shadow-[var(--shadow-elevated)]"
-                  : "bg-card border-border hover:border-primary/40"
+                  : "bg-card border-border hover:border-primary/40 hover:shadow-[var(--shadow-elevated)]"
               }`}
             >
               {m.lead && (
@@ -58,6 +66,20 @@ export function Team() {
                   Project Director
                 </div>
               )}
+              <div className="mb-5 relative w-20 h-20">
+                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/30 to-[var(--moss)]/30 blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                {m.photo ? (
+                  <img
+                    src={m.photo}
+                    alt={m.name}
+                    className="relative w-20 h-20 rounded-full object-cover ring-2 ring-border group-hover:ring-primary/50 transition-all duration-500"
+                  />
+                ) : (
+                  <div className="relative w-20 h-20 rounded-full grid place-items-center bg-gradient-to-br from-secondary to-secondary/40 text-foreground text-display text-xl ring-2 ring-border group-hover:ring-primary/50 transition-all duration-500">
+                    {m.initials}
+                  </div>
+                )}
+              </div>
               <div className="text-display text-xl text-foreground leading-tight">
                 {m.name}
               </div>
@@ -91,12 +113,21 @@ export function Team() {
         </div>
 
         {/* Supervisor — tribute */}
-        <div className="mt-16 relative overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-card via-card to-secondary/40 p-8 lg:p-12">
+        <div className="mt-16 relative overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-card via-card to-secondary/40 p-8 lg:p-12 fade-up">
           <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-primary/5 blur-3xl" />
+          <div className="absolute -bottom-10 -left-10 w-48 h-48 rounded-full bg-[var(--moss)]/5 blur-3xl" />
           <div className="relative grid lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-2 flex lg:justify-center">
-              <div className="grid place-items-center w-20 h-20 rounded-full bg-[var(--moss)]/10 text-[var(--moss)]">
-                <GraduationCap className="w-9 h-9" strokeWidth={1.5} />
+              <div className="relative">
+                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/30 to-[var(--moss)]/30 blur-xl" />
+                <img
+                  src={mushtaq}
+                  alt="Dr. Mushtaq Ahmad"
+                  className="relative w-28 h-28 rounded-full object-cover ring-4 ring-background shadow-[var(--shadow-elevated)]"
+                />
+                <div className="absolute -bottom-1 -right-1 grid place-items-center w-9 h-9 rounded-full bg-[var(--moss)] text-white ring-4 ring-background">
+                  <GraduationCap className="w-4 h-4" strokeWidth={2} />
+                </div>
               </div>
             </div>
             <div className="lg:col-span-7">
