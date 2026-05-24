@@ -1,4 +1,4 @@
-import { Mail, Instagram, MapPin, Building2 } from "lucide-react";
+import { Mail, Instagram, MapPin, Building2, ExternalLink } from "lucide-react";
 
 export function Contact() {
   return (
@@ -49,6 +49,23 @@ export function Contact() {
             </div>
             <div className="mt-1 text-foreground text-base group-hover:text-primary transition-colors">
               @pakistan_mbz
+            </div>
+          </a>
+
+          <a
+            href="https://www.researchgate.net/profile/Ayesha-Noor-14"
+            target="_blank"
+            rel="noreferrer noopener"
+            className="group p-7 rounded-2xl bg-card border border-border hover:border-primary/40 transition-all hover:shadow-[var(--shadow-elevated)] sm:col-span-2"
+          >
+            <div className="grid place-items-center w-11 h-11 rounded-full bg-[var(--moss)] text-white mb-5">
+              <ExternalLink className="w-5 h-5" />
+            </div>
+            <div className="text-[11px] uppercase tracking-widest text-muted-foreground">
+              ResearchGate — Lead Author
+            </div>
+            <div className="mt-1 text-foreground text-base group-hover:text-primary transition-colors">
+              Ayesha Noor · view publications &amp; profile →
             </div>
           </a>
 
