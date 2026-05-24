@@ -1,4 +1,5 @@
 import { Mail, Instagram, MapPin, Building2, ExternalLink } from "lucide-react";
+import ayeshaPhoto from "@/assets/people/rg-ayesha.jpg";
 
 export function Contact() {
   return (
@@ -56,17 +57,22 @@ export function Contact() {
             href="https://www.researchgate.net/profile/Ayesha-Noor-14"
             target="_blank"
             rel="noreferrer noopener"
-            className="group p-7 rounded-2xl bg-card border border-border hover:border-primary/40 transition-all hover:shadow-[var(--shadow-elevated)] sm:col-span-2"
+            className="group p-7 rounded-2xl bg-card border border-border hover:border-primary/40 transition-all hover:shadow-[var(--shadow-elevated)] sm:col-span-2 flex items-center gap-5"
           >
-            <div className="grid place-items-center w-11 h-11 rounded-full bg-[var(--moss)] text-white mb-5">
-              <ExternalLink className="w-5 h-5" />
+            <img
+              src={ayeshaPhoto}
+              alt="Ayesha Noor"
+              className="w-16 h-16 rounded-full object-cover ring-2 ring-border group-hover:ring-primary/50 transition-all shrink-0"
+            />
+            <div className="min-w-0 flex-1">
+              <div className="text-[11px] uppercase tracking-widest text-muted-foreground">
+                ResearchGate — Lead Author
+              </div>
+              <div className="mt-1 text-foreground text-base group-hover:text-primary transition-colors">
+                Ayesha Noor · view publications &amp; profile →
+              </div>
             </div>
-            <div className="text-[11px] uppercase tracking-widest text-muted-foreground">
-              ResearchGate — Lead Author
-            </div>
-            <div className="mt-1 text-foreground text-base group-hover:text-primary transition-colors">
-              Ayesha Noor · view publications &amp; profile →
-            </div>
+            <ExternalLink className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
           </a>
 
           <div className="p-7 rounded-2xl bg-card border border-border">
