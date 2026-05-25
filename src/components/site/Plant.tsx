@@ -28,17 +28,25 @@ export function Plant() {
 
         <div className="mt-16 grid lg:grid-cols-12 gap-12 lg:gap-16">
           <div className="lg:col-span-5">
-            <div className="aspect-[3/4] rounded-2xl overflow-hidden shadow-[var(--shadow-elevated)]">
-              <img
-                src={rhizome}
-                alt="Trillium govanianum plant uprooted, showing its rhizome — used in traditional medicine"
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-            </div>
+            <ZoomableImage
+              src={rhizome}
+              alt="Trillium govanianum plant with three whorled leaves, deep-maroon bloom and rhizome"
+              className="aspect-[3/4] shadow-[var(--shadow-elevated)]"
+            />
             <p className="mt-4 text-xs text-muted-foreground italic">
-              Photograph: Syed Munir Hussain, PMNH field collection.
+              Photograph: Syed Munir Hussain, PMNH field collection. Click{" "}
+              <em>Zoom &amp; pan</em> to inspect rhizome detail.
             </p>
+            <Link
+              to="/plants"
+              className="mt-4 inline-flex items-center gap-2 text-sm text-primary hover:text-accent transition-colors"
+            >
+              <span className="border-b border-current pb-0.5">
+                Explore other Himalayan medicinal plants
+              </span>
+              <span aria-hidden>→</span>
+            </Link>
+
           </div>
 
           <div className="lg:col-span-7">
