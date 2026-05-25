@@ -1,4 +1,6 @@
-import { BookOpen, ExternalLink } from "lucide-react";
+import { BookOpen, ExternalLink, Sparkles } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+
 
 const papers = [
   {
