@@ -61,7 +61,49 @@ export function Field() {
             );
           })}
         </div>
+
+        {/* Instagram reel feature */}
+        <div className="mt-16 grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          <div className="lg:col-span-5 fade-up">
+            <p className="text-xs uppercase tracking-[0.3em] text-accent mb-4">
+              Featured reel · @pakistan_mbz
+            </p>
+            <h3 className="text-display text-3xl lg:text-4xl leading-tight">
+              A minute in the field —{" "}
+              <span className="italic text-[var(--moss)]">
+                voices from the valley.
+              </span>
+            </h3>
+            <p className="mt-5 text-muted-foreground leading-relaxed">
+              Watch our team document Trillium populations and converse with
+              custodian communities in the Pakistani Himalayas. Shared directly
+              from our project Instagram.
+            </p>
+            <a
+              href="https://www.instagram.com/reel/DD7IC3pP1YE/"
+              target="_blank"
+              rel="noreferrer noopener"
+              className="mt-6 inline-flex items-center gap-2 text-sm text-primary hover:text-accent transition-colors"
+            >
+              <span className="border-b border-current pb-0.5">Open on Instagram</span>
+              <span aria-hidden>→</span>
+            </a>
+          </div>
+          <div className="lg:col-span-7 fade-up fade-up-delay-1">
+            <div className="relative mx-auto max-w-md rounded-3xl overflow-hidden shadow-[var(--shadow-elevated)] bg-black aspect-[9/16]">
+              <iframe
+                src="https://www.instagram.com/reel/DD7IC3pP1YE/embed"
+                allow="autoplay; encrypted-media; picture-in-picture"
+                allowFullScreen
+                loading="lazy"
+                className="absolute inset-0 w-full h-full"
+                title="Project field reel from @pakistan_mbz"
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
 }
+
