@@ -9,8 +9,26 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as StudentLabRouteImport } from './routes/student-lab'
+import { Route as PublicationRouteImport } from './routes/publication'
+import { Route as PlantsRouteImport } from './routes/plants'
 import { Route as IndexRouteImport } from './routes/index'
 
+const StudentLabRoute = StudentLabRouteImport.update({
+  id: '/student-lab',
+  path: '/student-lab',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PublicationRoute = PublicationRouteImport.update({
+  id: '/publication',
+  path: '/publication',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlantsRoute = PlantsRouteImport.update({
+  id: '/plants',
+  path: '/plants',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +37,61 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/plants': typeof PlantsRoute
+  '/publication': typeof PublicationRoute
+  '/student-lab': typeof StudentLabRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/plants': typeof PlantsRoute
+  '/publication': typeof PublicationRoute
+  '/student-lab': typeof StudentLabRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/plants': typeof PlantsRoute
+  '/publication': typeof PublicationRoute
+  '/student-lab': typeof StudentLabRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/plants' | '/publication' | '/student-lab'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/plants' | '/publication' | '/student-lab'
+  id: '__root__' | '/' | '/plants' | '/publication' | '/student-lab'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PlantsRoute: typeof PlantsRoute
+  PublicationRoute: typeof PublicationRoute
+  StudentLabRoute: typeof StudentLabRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/student-lab': {
+      id: '/student-lab'
+      path: '/student-lab'
+      fullPath: '/student-lab'
+      preLoaderRoute: typeof StudentLabRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/publication': {
+      id: '/publication'
+      path: '/publication'
+      fullPath: '/publication'
+      preLoaderRoute: typeof PublicationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/plants': {
+      id: '/plants'
+      path: '/plants'
+      fullPath: '/plants'
+      preLoaderRoute: typeof PlantsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,7 +104,20 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PlantsRoute: PlantsRoute,
+  PublicationRoute: PublicationRoute,
+  StudentLabRoute: StudentLabRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
