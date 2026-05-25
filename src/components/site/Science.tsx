@@ -82,16 +82,26 @@ export function Science() {
                     {p.journal}
                   </p>
                   {p.doi && (
-                    <a
-                      href={p.doi}
-                      target="_blank"
-                      rel="noreferrer noopener"
-                      className="mt-4 inline-flex items-center gap-1.5 text-sm text-accent hover:text-foreground transition-colors"
-                    >
-                      View publication
-                      <ExternalLink className="w-3.5 h-3.5" />
-                    </a>
+                    <div className="mt-4 flex flex-wrap items-center gap-3">
+                      <Link
+                        to="/publication"
+                        className="inline-flex items-center gap-1.5 text-sm px-4 py-2 rounded-full bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
+                      >
+                        <Sparkles className="w-3.5 h-3.5" />
+                        Explore in 3D
+                      </Link>
+                      <a
+                        href={p.doi}
+                        target="_blank"
+                        rel="noreferrer noopener"
+                        className="inline-flex items-center gap-1.5 text-sm text-accent hover:text-foreground transition-colors"
+                      >
+                        Visit publication (DOI)
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
+                    </div>
                   )}
+
                 </div>
               </div>
             </article>
