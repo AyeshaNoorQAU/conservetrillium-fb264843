@@ -1,4 +1,7 @@
 import rhizome from "@/assets/trillium-rhizome.jpg";
+import { ZoomableImage } from "./ZoomableImage";
+import { Link } from "@tanstack/react-router";
+
 
 const facts = [
   { label: "Family", value: "Melanthiaceae" },
