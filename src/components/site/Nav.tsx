@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { Leaf, Menu, X } from "lucide-react";
+import { Leaf, Menu, X, Shield } from "lucide-react";
 import { Link, useLocation } from "@tanstack/react-router";
+import { useAuth } from "@/hooks/use-auth";
 
 const sectionLinks = [
   { href: "#mission", label: "Mission" },
@@ -21,6 +22,7 @@ export function Nav() {
   const [open, setOpen] = useState(false);
   const loc = useLocation();
   const onHome = loc.pathname === "/";
+  const { user, isAdmin } = useAuth();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -29,55 +31,28 @@ export function Nav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Always opaque off-home so links remain legible
   const opaque = scrolled || !onHome;
 
   return (
-    <header
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ${
-        opaque ? "bg-background/85 backdrop-blur-md border-b border-border/60" : "bg-transparent"
-      }`}
-    >
+    <header className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ${opaque ? "bg-background/85 backdrop-blur-md border-b border-border/60" : "bg-transparent"}`}>
       <div className="mx-auto max-w-7xl px-6 lg:px-10 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2 group">
-          <span
-            className={`grid place-items-center w-9 h-9 rounded-full transition-colors ${
-              opaque ? "bg-primary text-primary-foreground" : "bg-white/15 text-white backdrop-blur"
-            }`}
-          >
+          <span className={`grid place-items-center w-9 h-9 rounded-full transition-colors ${opaque ? "bg-primary text-primary-foreground" : "bg-white/15 text-white backdrop-blur"}`}>
             <Leaf className="w-4 h-4" strokeWidth={2.2} />
           </span>
-          <span
-            className={`text-display text-lg tracking-tight ${
-              opaque ? "text-foreground" : "text-white"
-            }`}
-          >
+          <span className={`text-display text-lg tracking-tight ${opaque ? "text-foreground" : "text-white"}`}>
             Conserve<span className="italic"> Trillium</span>
           </span>
         </Link>
 
         <nav className="hidden lg:flex items-center gap-6">
-          {onHome &&
-            sectionLinks.map((l) => (
-              <a
-                key={l.href}
-                href={l.href}
-                className={`text-sm tracking-wide transition-colors ${
-                  opaque ? "text-muted-foreground hover:text-primary" : "text-white/80 hover:text-white"
-                }`}
-              >
-                {l.label}
-              </a>
-            ))}
+          {onHome && sectionLinks.map((l) => (
+            <a key={l.href} href={l.href} className={`text-sm tracking-wide transition-colors ${opaque ? "text-muted-foreground hover:text-primary" : "text-white/80 hover:text-white"}`}>
+              {l.label}
+            </a>
+          ))}
           {pageLinks.map((l) => (
-            <Link
-              key={l.to}
-              to={l.to}
-              activeProps={{ className: "text-primary font-medium" }}
-              className={`text-sm tracking-wide transition-colors ${
-                opaque ? "text-muted-foreground hover:text-primary" : "text-white/80 hover:text-white"
-              }`}
-            >
+            <Link key={l.to} to={l.to} activeProps={{ className: "text-primary font-medium" }} className={`text-sm tracking-wide transition-colors ${opaque ? "text-muted-foreground hover:text-primary" : "text-white/80 hover:text-white"}`}>
               {l.label}
             </Link>
           ))}
@@ -85,22 +60,19 @@ export function Nav() {
 
         <div className="hidden sm:flex items-center gap-3">
           <Link
-            to="/student-lab"
+            to={user ? "/admin" : "/login"}
             className={`hidden md:inline-flex items-center gap-2 px-4 py-2 text-sm rounded-full transition-all ${
               opaque
-                ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                : "bg-white text-primary hover:bg-white/90"
+                ? isAdmin ? "bg-primary text-primary-foreground hover:bg-primary/90" : "border border-border text-foreground hover:border-primary/40"
+                : "bg-white/15 text-white backdrop-blur hover:bg-white/25"
             }`}
+            title={user ? "Open admin" : "Sign in to edit the site"}
           >
-            Open Student Lab
+            <Shield className="w-3.5 h-3.5" /> {isAdmin ? "Admin" : user ? "Account" : "Sign in"}
           </Link>
         </div>
 
-        <button
-          className={`lg:hidden p-2 rounded-md ${opaque ? "text-foreground" : "text-white"}`}
-          aria-label="Toggle menu"
-          onClick={() => setOpen((o) => !o)}
-        >
+        <button className={`lg:hidden p-2 rounded-md ${opaque ? "text-foreground" : "text-white"}`} aria-label="Toggle menu" onClick={() => setOpen((o) => !o)}>
           {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
       </div>
@@ -108,17 +80,15 @@ export function Nav() {
       {open && (
         <div className="lg:hidden bg-background border-t border-border">
           <div className="px-6 py-4 flex flex-col gap-3">
-            {onHome &&
-              sectionLinks.map((l) => (
-                <a key={l.href} href={l.href} onClick={() => setOpen(false)} className="text-sm text-foreground/80">
-                  {l.label}
-                </a>
-              ))}
-            {pageLinks.map((l) => (
-              <Link key={l.to} to={l.to} onClick={() => setOpen(false)} className="text-sm text-foreground/80">
-                {l.label}
-              </Link>
+            {onHome && sectionLinks.map((l) => (
+              <a key={l.href} href={l.href} onClick={() => setOpen(false)} className="text-sm text-foreground/80">{l.label}</a>
             ))}
+            {pageLinks.map((l) => (
+              <Link key={l.to} to={l.to} onClick={() => setOpen(false)} className="text-sm text-foreground/80">{l.label}</Link>
+            ))}
+            <Link to={user ? "/admin" : "/login"} onClick={() => setOpen(false)} className="text-sm text-primary">
+              {isAdmin ? "Admin dashboard" : user ? "Account" : "Sign in"}
+            </Link>
           </div>
         </div>
       )}

@@ -6,7 +6,7 @@ import { Plant } from "@/components/site/Plant";
 import { Impact } from "@/components/site/Impact";
 import { Field } from "@/components/site/Field";
 import { Science } from "@/components/site/Science";
-import { Help } from "@/components/site/Help";
+import { Announcements } from "@/components/site/Announcements";
 import { Team } from "@/components/site/Team";
 import { Contact } from "@/components/site/Contact";
 import { Footer } from "@/components/site/Footer";
@@ -24,7 +24,7 @@ export const Route = createFileRoute("/")({
       {
         property: "og:description",
         content:
-          "Conservation of the endangered Trillium govanianum across the Pakistani Himalayas — by PMNH, supported by the MBZ Species Conservation Fund.",
+          "Conservation of the endangered Trillium govanianum across the Pakistani Himalayas — by PMNH, supported by the MBZ Species Conservation Fund. Founded by Ayesha Noor.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -44,7 +44,7 @@ function Index() {
         <Impact />
         <Field />
         <Science />
-        <Help />
+        <Announcements />
         <Team />
         <Contact />
       </main>
