@@ -123,20 +123,18 @@
   .hero-overlay { background: var(--gradient-hero); }
   .mist-fade { background: var(--gradient-mist); }
 
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .fade-up { animation: fadeUp 1s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
-  .fade-up-delay-1 { animation-delay: 0.15s; }
-  .fade-up-delay-2 { animation-delay: 0.3s; }
-  .fade-up-delay-3 { animation-delay: 0.45s; }
+@layer utilities {
+  @keyframes kenBurns1 { 0% { transform: scale(1) translate(0, 0); } 100% { transform: scale(1.18) translate(-2%, -2%); } }
+  @keyframes kenBurns2 { 0% { transform: scale(1.1) translate(1%, 1%); } 100% { transform: scale(1.22) translate(-1%, -3%); } }
+  @keyframes kenBurns3 { 0% { transform: scale(1.05) translate(-1%, 0); } 100% { transform: scale(1.2) translate(2%, -1%); } }
+  .ken-burns-1 { animation: kenBurns1 16s ease-in-out infinite alternate; }
+  .ken-burns-2 { animation: kenBurns2 20s ease-in-out infinite alternate; }
+  .ken-burns-3 { animation: kenBurns3 22s ease-in-out infinite alternate; }
 
-  @keyframes slowZoom {
-    from { transform: scale(1.05); }
-    to { transform: scale(1.15); }
-  }
-  .slow-zoom { animation: slowZoom 18s ease-out infinite alternate; }
+  /* 3D tilt — uses CSS custom props set in JS */
+  .tilt-3d { perspective: 1200px; }
+  .tilt-3d-inner { transform-style: preserve-3d; }
+  .group\/tilt:hover .tilt-3d-inner { box-shadow: 0 30px 80px -30px oklch(0.18 0.04 150 / 0.45); }
 }
 
 @layer utilities {

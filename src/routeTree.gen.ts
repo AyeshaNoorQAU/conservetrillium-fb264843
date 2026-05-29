@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as StudentLabRouteImport } from './routes/student-lab'
 import { Route as PublicationRouteImport } from './routes/publication'
 import { Route as PlantsRouteImport } from './routes/plants'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 
 const StudentLabRoute = StudentLabRouteImport.update({
@@ -29,6 +31,16 @@ const PlantsRoute = PlantsRouteImport.update({
   path: '/plants',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -37,12 +49,16 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/login': typeof LoginRoute
   '/plants': typeof PlantsRoute
   '/publication': typeof PublicationRoute
   '/student-lab': typeof StudentLabRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/login': typeof LoginRoute
   '/plants': typeof PlantsRoute
   '/publication': typeof PublicationRoute
   '/student-lab': typeof StudentLabRoute
@@ -50,20 +66,37 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/login': typeof LoginRoute
   '/plants': typeof PlantsRoute
   '/publication': typeof PublicationRoute
   '/student-lab': typeof StudentLabRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/plants' | '/publication' | '/student-lab'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/login'
+    | '/plants'
+    | '/publication'
+    | '/student-lab'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/plants' | '/publication' | '/student-lab'
-  id: '__root__' | '/' | '/plants' | '/publication' | '/student-lab'
+  to: '/' | '/admin' | '/login' | '/plants' | '/publication' | '/student-lab'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/login'
+    | '/plants'
+    | '/publication'
+    | '/student-lab'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
+  LoginRoute: typeof LoginRoute
   PlantsRoute: typeof PlantsRoute
   PublicationRoute: typeof PublicationRoute
   StudentLabRoute: typeof StudentLabRoute
@@ -92,6 +125,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlantsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -104,6 +151,8 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
+  LoginRoute: LoginRoute,
   PlantsRoute: PlantsRoute,
   PublicationRoute: PublicationRoute,
   StudentLabRoute: StudentLabRoute,
@@ -111,13 +160,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
