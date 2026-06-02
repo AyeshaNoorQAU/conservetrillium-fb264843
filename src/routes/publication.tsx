@@ -38,9 +38,18 @@ const facts = [
 ];
 
 const authors = [
-  "Khanum R.", "Noor A.", "Hussain A.", "Hussain R.", "Akrum S.",
-  "Qayum S.", "Kazmi R.A.", "Ali S.F.", "Khan S.", "Hanif M.",
-  "Munir S.", "Hassan S.U.",
+  "Khanum R.",
+  "Noor A.",
+  "Hussain A.",
+  "Hussain R.",
+  "Akrum S.",
+  "Qayum S.",
+  "Kazmi R.A.",
+  "Ali S.F.",
+  "Khan S.",
+  "Hanif M.",
+  "Munir S.",
+  "Hassan S.U.",
 ];
 
 const sections = [
@@ -86,15 +95,12 @@ function PublicationPage() {
               </p>
               <h1 className="text-display text-4xl sm:text-5xl lg:text-6xl leading-[1.02] text-balance">
                 Biocultural dimensions of{" "}
-                <span className="italic text-[var(--moss)]">
-                  endangered medicinal flora
-                </span>{" "}
-                in the Pakistani Himalayas.
+                <span className="italic text-[var(--moss)]">endangered medicinal flora</span> in the
+                Pakistani Himalayas.
               </h1>
               <p className="mt-6 text-muted-foreground leading-relaxed text-lg">
                 Community knowledge, gender roles, and governance —
-                <em> Ethnobotany Research &amp; Applications</em>{" "}
-                <strong>33:49</strong> (2026).
+                <em> Ethnobotany Research &amp; Applications</em> <strong>33:49</strong> (2026).
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
@@ -130,9 +136,7 @@ function PublicationPage() {
                 className="fade-up p-6 rounded-2xl bg-card border border-border text-center"
               >
                 <f.icon className="w-5 h-5 text-primary mx-auto mb-3" />
-                <div className="text-display text-3xl text-foreground">
-                  {f.value}
-                </div>
+                <div className="text-display text-3xl text-foreground">{f.value}</div>
                 <div className="mt-1 text-[11px] uppercase tracking-widest text-muted-foreground">
                   {f.label}
                 </div>
@@ -148,13 +152,11 @@ function PublicationPage() {
               </p>
               <h2 className="text-display text-3xl lg:text-4xl leading-tight">
                 Four sections.{" "}
-                <span className="italic text-[var(--moss)]">
-                  One mountain conversation.
-                </span>
+                <span className="italic text-[var(--moss)]">One mountain conversation.</span>
               </h2>
               <p className="mt-5 text-muted-foreground leading-relaxed">
-                Hover any card below to see it lift off the page — the same
-                cinematic care we hope you take with the species themselves.
+                Hover any card below to see it lift off the page — the same cinematic care we hope
+                you take with the species themselves.
               </p>
             </div>
             <div className="lg:col-span-8 grid sm:grid-cols-2 gap-4">
@@ -164,15 +166,9 @@ function PublicationPage() {
                   style={{ animationDelay: `${i * 0.1}s`, transformStyle: "preserve-3d" }}
                   className="fade-up group relative p-7 rounded-2xl bg-card border border-border transition-all duration-500 hover:-translate-y-2 hover:rotate-[-1deg] hover:shadow-[var(--shadow-elevated)] hover:border-primary/40"
                 >
-                  <div className="text-[11px] uppercase tracking-[0.25em] text-accent">
-                    {s.n}
-                  </div>
-                  <h3 className="mt-2 text-display text-2xl text-foreground">
-                    {s.t}
-                  </h3>
-                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                    {s.p}
-                  </p>
+                  <div className="text-[11px] uppercase tracking-[0.25em] text-accent">{s.n}</div>
+                  <h3 className="mt-2 text-display text-2xl text-foreground">{s.t}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{s.p}</p>
                 </article>
               ))}
             </div>
@@ -182,8 +178,8 @@ function PublicationPage() {
           <div className="mt-24 p-10 lg:p-16 rounded-3xl bg-gradient-to-br from-primary to-[var(--moss)] text-primary-foreground relative overflow-hidden">
             <Quote className="absolute top-6 left-6 w-14 h-14 opacity-15" />
             <p className="text-display italic text-2xl lg:text-4xl leading-snug max-w-4xl relative">
-              "Conservation written without the women who carry the knowledge is
-              conservation written in disappearing ink."
+              "Conservation written without the women who carry the knowledge is conservation
+              written in disappearing ink."
             </p>
             <p className="mt-6 text-xs uppercase tracking-[0.3em] opacity-80 relative">
               From the discussion · §4.3
@@ -192,12 +188,10 @@ function PublicationPage() {
 
           {/* Authors */}
           <section className="mt-24">
-            <p className="text-xs uppercase tracking-[0.3em] text-accent mb-4">
-              Authorship
-            </p>
+            <p className="text-xs uppercase tracking-[0.3em] text-accent mb-4">Authorship</p>
             <h2 className="text-display text-3xl lg:text-4xl leading-tight max-w-3xl">
-              A field-led collaboration across PMNH, Quaid-i-Azam University, and
-              partner institutions.
+              A field-led collaboration across PMNH, Quaid-i-Azam University, and partner
+              institutions.
             </h2>
             <div className="mt-8 flex flex-wrap gap-2">
               {authors.map((a) => (
@@ -212,13 +206,10 @@ function PublicationPage() {
             <p className="mt-6 text-sm text-muted-foreground">
               Cite as: Khanum R, Noor A, Hussain A, et al. (2026).{" "}
               <em>
-                Biocultural dimensions of endangered medicinal flora: Community
-                knowledge, gender roles, and governance in the Pakistani
-                Himalayas.
+                Biocultural dimensions of endangered medicinal flora: Community knowledge, gender
+                roles, and governance in the Pakistani Himalayas.
               </em>{" "}
-              <span className="text-foreground">
-                Ethnobotany Research &amp; Applications
-              </span>{" "}
+              <span className="text-foreground">Ethnobotany Research &amp; Applications</span>{" "}
               33:49.{" "}
               <a
                 href="https://doi.org/10.32859/era.33.49.1-12"
@@ -298,18 +289,15 @@ function Book3D() {
           </div>
           <div className="mt-4 h-px bg-border" />
           <p className="mt-3 text-[8px] text-muted-foreground leading-relaxed">
-            "Women hold the highest-resolution household knowledge; men dominate
-            trade. Governance vacuums between forest departments and local
-            jirgas correlate with overharvesting…"
+            "Women hold the highest-resolution household knowledge; men dominate trade. Governance
+            vacuums between forest departments and local jirgas correlate with overharvesting…"
           </p>
         </div>
 
         {/* Front cover */}
         <div
           style={{
-            transform: open
-              ? "translateZ(8px) rotateY(-155deg)"
-              : "translateZ(8px) rotateY(0deg)",
+            transform: open ? "translateZ(8px) rotateY(-155deg)" : "translateZ(8px) rotateY(0deg)",
             transformOrigin: "left center",
             transition: "transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1)",
             backfaceVisibility: "hidden",

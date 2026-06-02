@@ -1,5 +1,13 @@
 import { useState } from "react";
-import { BookOpen, Sparkles, CheckCircle2, XCircle, RotateCw, GraduationCap, Download } from "lucide-react";
+import {
+  BookOpen,
+  Sparkles,
+  CheckCircle2,
+  XCircle,
+  RotateCw,
+  GraduationCap,
+  Download,
+} from "lucide-react";
 
 type FlipCard = {
   term: string;
@@ -12,37 +20,43 @@ const flashcards: FlipCard[] = [
   {
     term: "Trillium govanianum",
     hint: "Click to reveal botanical profile",
-    detail: "A rhizomatous perennial of the family Melanthiaceae, endemic to the Himalayan understory at 2,500–4,000 m. Recognised by its three whorled leaves and dark maroon trillium flower.",
+    detail:
+      "A rhizomatous perennial of the family Melanthiaceae, endemic to the Himalayan understory at 2,500–4,000 m. Recognised by its three whorled leaves and dark maroon trillium flower.",
     emoji: "🌸",
   },
   {
     term: "Nag Chatri",
     hint: "Local Pakistani name — tap to learn",
-    detail: '"Snake umbrella" — named for the three leaves that resemble a cobra\'s hood. Used in traditional Hakim medicine for inflammation, wounds, and post-natal recovery.',
+    detail:
+      '"Snake umbrella" — named for the three leaves that resemble a cobra\'s hood. Used in traditional Hakim medicine for inflammation, wounds, and post-natal recovery.',
     emoji: "🐍",
   },
   {
     term: "Steroidal Saponins",
     hint: "The active compounds — explore",
-    detail: "Govanoside A and related saponins, isolated chiefly from the rhizome, drive global demand. They show anti-inflammatory, anti-cancer, and anti-fungal bioactivity.",
+    detail:
+      "Govanoside A and related saponins, isolated chiefly from the rhizome, drive global demand. They show anti-inflammatory, anti-cancer, and anti-fungal bioactivity.",
     emoji: "⚗️",
   },
   {
     term: "Ex-situ Conservation",
     hint: "A key strategy — flip to read",
-    detail: "Off-site preservation in botanical gardens, seed banks, and tissue-culture labs. Complements in-situ protection by safeguarding genetic diversity against catastrophic loss.",
+    detail:
+      "Off-site preservation in botanical gardens, seed banks, and tissue-culture labs. Complements in-situ protection by safeguarding genetic diversity against catastrophic loss.",
     emoji: "🌱",
   },
   {
     term: "MaxEnt Modelling",
     hint: "Our predictive tool",
-    detail: "Maximum-entropy species-distribution modelling uses occurrence data + bioclimatic variables to predict suitable habitat — guiding where to focus conservation effort.",
+    detail:
+      "Maximum-entropy species-distribution modelling uses occurrence data + bioclimatic variables to predict suitable habitat — guiding where to focus conservation effort.",
     emoji: "🗺️",
   },
   {
     term: "IUCN Red List",
     hint: "Why this matters globally",
-    detail: "International Union for Conservation of Nature classification. Trillium govanianum is listed as Endangered — populations are fragmented and declining due to over-harvesting.",
+    detail:
+      "International Union for Conservation of Nature classification. Trillium govanianum is listed as Endangered — populations are fragmented and declining due to over-harvesting.",
     emoji: "🛡️",
   },
 ];
@@ -133,14 +147,11 @@ export function Help() {
             </p>
             <h2 className="text-display text-4xl sm:text-5xl lg:text-6xl leading-[1.05] text-balance">
               Learn the science.{" "}
-              <span className="italic text-[var(--moss)]">
-                Carry the story forward.
-              </span>
+              <span className="italic text-[var(--moss)]">Carry the story forward.</span>
             </h2>
             <p className="mt-6 text-muted-foreground leading-relaxed">
-              A free, interactive primer for students of botany,
-              ethnobiology, and conservation. Flip the cards, test what you
-              know, and download the field reference.
+              A free, interactive primer for students of botany, ethnobiology, and conservation.
+              Flip the cards, test what you know, and download the field reference.
             </p>
           </div>
         </div>
@@ -149,9 +160,7 @@ export function Help() {
         <div className="mb-20">
           <div className="flex items-center gap-2 mb-6 text-sm text-muted-foreground">
             <BookOpen className="w-4 h-4 text-primary" />
-            <span className="uppercase tracking-widest text-xs">
-              Tap a card to flip
-            </span>
+            <span className="uppercase tracking-widest text-xs">Tap a card to flip</span>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {flashcards.map((c, i) => {
@@ -218,14 +227,11 @@ export function Help() {
             </p>
             <h3 className="text-display text-3xl text-foreground leading-tight mb-4">
               Five questions.{" "}
-              <span className="italic text-[var(--moss)]">
-                One mountain flower.
-              </span>
+              <span className="italic text-[var(--moss)]">One mountain flower.</span>
             </h3>
             <p className="text-muted-foreground text-sm leading-relaxed">
-              Useful before a field visit, a class presentation, or a
-              conservation viva. Each answer comes with the reasoning, not
-              just the result.
+              Useful before a field visit, a class presentation, or a conservation viva. Each answer
+              comes with the reasoning, not just the result.
             </p>
             <div className="mt-6 flex items-center gap-4 text-sm">
               <div className="px-3 py-1.5 rounded-full bg-secondary text-foreground text-xs">
@@ -253,10 +259,10 @@ export function Help() {
                   {score === quiz.length
                     ? "Outstanding — you could lead the field session yourself."
                     : score >= quiz.length - 1
-                    ? "Excellent grasp of the species and its conservation context."
-                    : score >= 3
-                    ? "A solid foundation — revisit the flashcards above to polish the details."
-                    : "Great first attempt. The flashcards above cover every answer."}
+                      ? "Excellent grasp of the species and its conservation context."
+                      : score >= 3
+                        ? "A solid foundation — revisit the flashcards above to polish the details."
+                        : "Great first attempt. The flashcards above cover every answer."}
                 </p>
                 <button
                   onClick={reset}
@@ -289,8 +295,8 @@ export function Help() {
                             ? isAnswer
                               ? "border-[var(--moss)] bg-[var(--moss)]/5 text-foreground"
                               : isPicked
-                              ? "border-ember/40 bg-ember/5 text-foreground"
-                              : "border-border opacity-60"
+                                ? "border-ember/40 bg-ember/5 text-foreground"
+                                : "border-border opacity-60"
                             : "border-border hover:border-primary/40 hover:bg-secondary/40 cursor-pointer"
                         }`}
                       >
@@ -310,9 +316,7 @@ export function Help() {
                     <div className="text-[11px] uppercase tracking-widest text-accent mb-1">
                       Why
                     </div>
-                    <p className="text-sm text-foreground leading-relaxed">
-                      {quiz[qi].why}
-                    </p>
+                    <p className="text-sm text-foreground leading-relaxed">{quiz[qi].why}</p>
                     <button
                       onClick={next}
                       className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-foreground text-background text-xs hover:opacity-90 transition-opacity"
@@ -351,12 +355,8 @@ export function Help() {
               className="fade-up p-6 rounded-2xl border border-border bg-card hover:border-primary/40 hover:-translate-y-0.5 transition-all"
             >
               <r.icon className="w-5 h-5 text-primary mb-4" />
-              <div className="text-display text-lg text-foreground">
-                {r.title}
-              </div>
-              <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
-                {r.text}
-              </p>
+              <div className="text-display text-lg text-foreground">{r.title}</div>
+              <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{r.text}</p>
             </div>
           ))}
         </div>

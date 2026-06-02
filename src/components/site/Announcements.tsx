@@ -37,11 +37,15 @@ export function Announcements() {
             >
               <p className="text-[11px] uppercase tracking-widest text-muted-foreground">
                 {new Date(a.created_at).toLocaleDateString(undefined, {
-                  day: "numeric", month: "long", year: "numeric",
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
                 })}
               </p>
               <h3 className="mt-2 text-display text-2xl text-foreground leading-snug">{a.title}</h3>
-              <p className="mt-3 text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">{a.body}</p>
+              <p className="mt-3 text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                {a.body}
+              </p>
             </article>
           ))}
         </div>

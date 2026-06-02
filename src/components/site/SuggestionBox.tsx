@@ -36,7 +36,9 @@ export function SuggestionBox() {
       return;
     }
     setSent(true);
-    setName(""); setEmail(""); setMessage("");
+    setName("");
+    setEmail("");
+    setMessage("");
     toast.success("Thank you — your suggestion has reached Ayesha.");
   };
 
@@ -56,7 +58,10 @@ export function SuggestionBox() {
           <div className="mt-8 flex items-center gap-3 text-[var(--moss)]">
             <CheckCircle2 className="w-5 h-5" />
             <span className="text-sm">Received with thanks. You can send another anytime.</span>
-            <button onClick={() => setSent(false)} className="ml-auto text-xs underline text-muted-foreground">
+            <button
+              onClick={() => setSent(false)}
+              className="ml-auto text-xs underline text-muted-foreground"
+            >
               Send another
             </button>
           </div>
@@ -92,7 +97,11 @@ export function SuggestionBox() {
                 disabled={loading}
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 disabled:opacity-60 transition-all"
               >
-                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                {loading ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Send className="w-4 h-4" />
+                )}
                 Send suggestion
               </button>
             </div>

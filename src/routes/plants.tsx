@@ -10,24 +10,88 @@ import aconitum from "@/assets/plants/aconitum.jpg";
 import podophyllum from "@/assets/plants/podophyllum.jpg";
 
 type Plant = {
-  slug: string; scientific: string; local: string; family: string; altitude: string;
-  iucn: string; uses: string; threats: string; img: string; description: string;
+  slug: string;
+  scientific: string;
+  local: string;
+  family: string;
+  altitude: string;
+  iucn: string;
+  uses: string;
+  threats: string;
+  img: string;
+  description: string;
 };
 
 const plants: Plant[] = [
-  { slug: "trillium-govanianum", scientific: "Trillium govanianum", local: "Nag Chatri · Teen Patra", family: "Melanthiaceae", altitude: "2,400 – 3,300 m", iucn: "Endangered", uses: "Reproductive health, anti-inflammatory, hormonal balance", threats: "Overharvesting · slow regeneration · habitat loss", img: trillium, description: "A slow-growing rhizomatous perennial with a single deep-maroon bloom held above three broad leaves. The rhizome is rich in steroidal saponins and forms the focus of our flagship conservation effort." },
-  { slug: "dactylorhiza-hatagirea", scientific: "Dactylorhiza hatagirea", local: "Salam Panja · Hatta Haddi", family: "Orchidaceae", altitude: "2,500 – 4,000 m", iucn: "Critically Endangered (regional)", uses: "Tonic, aphrodisiac, wound healing, post-partum recovery", threats: "Tuber harvesting · grazing pressure · climate shift", img: dactylorhiza, description: "A terrestrial orchid of subalpine meadows with a dense spike of pink-purple flowers. Its palmately-lobed tubers (the namesake 'hand-roots') are heavily traded in unani and ayurvedic markets." },
-  { slug: "aconitum-heterophyllum", scientific: "Aconitum heterophyllum", local: "Atees · Patris", family: "Ranunculaceae", altitude: "2,400 – 3,800 m", iucn: "Endangered", uses: "Anti-pyretic, digestive tonic, paediatric medicine", threats: "Unsustainable rootstock extraction · loss of alpine pasture", img: aconitum, description: "Unlike its toxic cousins, A. heterophyllum's tuberous roots are non-poisonous and prized in traditional formulations. Populations in Pakistan's Himalayan belt are critically thinned." },
-  { slug: "podophyllum-hexandrum", scientific: "Podophyllum hexandrum", local: "Bankakri · Himalayan Mayapple", family: "Berberidaceae", altitude: "2,500 – 4,000 m", iucn: "Endangered", uses: "Source of podophyllotoxin — precursor to anticancer drugs (etoposide, teniposide)", threats: "Pharmaceutical-grade demand · over-collection of rhizomes", img: podophyllum, description: "A solitary herb of mossy forest floors carrying a single pale-pink cup-shaped flower beneath an umbrella-like deeply lobed leaf. Its rhizome supplies the global pipeline for semi-synthetic chemotherapy." },
+  {
+    slug: "trillium-govanianum",
+    scientific: "Trillium govanianum",
+    local: "Nag Chatri · Teen Patra",
+    family: "Melanthiaceae",
+    altitude: "2,400 – 3,300 m",
+    iucn: "Endangered",
+    uses: "Reproductive health, anti-inflammatory, hormonal balance",
+    threats: "Overharvesting · slow regeneration · habitat loss",
+    img: trillium,
+    description:
+      "A slow-growing rhizomatous perennial with a single deep-maroon bloom held above three broad leaves. The rhizome is rich in steroidal saponins and forms the focus of our flagship conservation effort.",
+  },
+  {
+    slug: "dactylorhiza-hatagirea",
+    scientific: "Dactylorhiza hatagirea",
+    local: "Salam Panja · Hatta Haddi",
+    family: "Orchidaceae",
+    altitude: "2,500 – 4,000 m",
+    iucn: "Critically Endangered (regional)",
+    uses: "Tonic, aphrodisiac, wound healing, post-partum recovery",
+    threats: "Tuber harvesting · grazing pressure · climate shift",
+    img: dactylorhiza,
+    description:
+      "A terrestrial orchid of subalpine meadows with a dense spike of pink-purple flowers. Its palmately-lobed tubers (the namesake 'hand-roots') are heavily traded in unani and ayurvedic markets.",
+  },
+  {
+    slug: "aconitum-heterophyllum",
+    scientific: "Aconitum heterophyllum",
+    local: "Atees · Patris",
+    family: "Ranunculaceae",
+    altitude: "2,400 – 3,800 m",
+    iucn: "Endangered",
+    uses: "Anti-pyretic, digestive tonic, paediatric medicine",
+    threats: "Unsustainable rootstock extraction · loss of alpine pasture",
+    img: aconitum,
+    description:
+      "Unlike its toxic cousins, A. heterophyllum's tuberous roots are non-poisonous and prized in traditional formulations. Populations in Pakistan's Himalayan belt are critically thinned.",
+  },
+  {
+    slug: "podophyllum-hexandrum",
+    scientific: "Podophyllum hexandrum",
+    local: "Bankakri · Himalayan Mayapple",
+    family: "Berberidaceae",
+    altitude: "2,500 – 4,000 m",
+    iucn: "Endangered",
+    uses: "Source of podophyllotoxin — precursor to anticancer drugs (etoposide, teniposide)",
+    threats: "Pharmaceutical-grade demand · over-collection of rhizomes",
+    img: podophyllum,
+    description:
+      "A solitary herb of mossy forest floors carrying a single pale-pink cup-shaped flower beneath an umbrella-like deeply lobed leaf. Its rhizome supplies the global pipeline for semi-synthetic chemotherapy.",
+  },
 ];
 
 export const Route = createFileRoute("/plants")({
   head: () => ({
     meta: [
       { title: "Endangered Himalayan Medicinal Plants — ConserveTrillium" },
-      { name: "description", content: "Profiles of four endangered medicinal plants of the Pakistani Himalayas with interactive 3D-tilt photography and zoom." },
+      {
+        name: "description",
+        content:
+          "Profiles of four endangered medicinal plants of the Pakistani Himalayas with interactive 3D-tilt photography and zoom.",
+      },
       { property: "og:title", content: "Endangered Himalayan Medicinal Plants" },
-      { property: "og:description", content: "Interactive 3D botanical profiles of four endangered Himalayan medicinal species." },
+      {
+        property: "og:description",
+        content:
+          "Interactive 3D botanical profiles of four endangered Himalayan medicinal species.",
+      },
     ],
   }),
   component: PlantsPage,
@@ -39,14 +103,20 @@ function PlantsPage() {
       <Nav />
       <main className="pt-28 pb-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-10">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-10"
+          >
             <ArrowLeft className="w-4 h-4" /> Back to home
           </Link>
 
           <header className="max-w-3xl mb-16 fade-up">
-            <p className="text-xs uppercase tracking-[0.3em] text-accent mb-6">Field herbarium · 3D interactive</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-accent mb-6">
+              Field herbarium · 3D interactive
+            </p>
             <h1 className="text-display text-5xl lg:text-7xl leading-[1.02] text-balance">
-              Four endangered <span className="italic text-[var(--moss)]">jewels</span> of the Pakistani Himalayas.
+              Four endangered <span className="italic text-[var(--moss)]">jewels</span> of the
+              Pakistani Himalayas.
             </h1>
             <p className="mt-6 text-muted-foreground leading-relaxed text-lg">
               Hover any specimen for a 3D parallax tilt, or click <em>Zoom &amp; pan</em> to inspect
@@ -106,7 +176,11 @@ function Fact({ label, value, accent }: { label: string; value: string; accent?:
   return (
     <div className="border-t border-border pt-3">
       <dt className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">{label}</dt>
-      <dd className={`mt-1.5 text-[15px] leading-snug ${accent ? "text-ember font-medium" : "text-foreground"}`}>{value}</dd>
+      <dd
+        className={`mt-1.5 text-[15px] leading-snug ${accent ? "text-ember font-medium" : "text-foreground"}`}
+      >
+        {value}
+      </dd>
     </div>
   );
 }

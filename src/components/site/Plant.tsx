@@ -19,8 +19,8 @@ export function Plant() {
         <div className="max-w-3xl">
           <p className="text-xs uppercase tracking-[0.3em] text-accent mb-6">Botanical Profile</p>
           <h2 className="text-display text-4xl sm:text-5xl lg:text-6xl leading-[1.05] text-balance">
-            <em className="text-[var(--moss)]">Trillium govanianum</em> — a slow-growing
-            jewel of the high Himalayas.
+            <em className="text-[var(--moss)]">Trillium govanianum</em> — a slow-growing jewel of
+            the high Himalayas.
           </h2>
         </div>
 
@@ -37,8 +37,13 @@ export function Plant() {
               Photograph: Syed Munir Hussain, PMNH field collection. Hover for 3D parallax; click{" "}
               <em>Zoom &amp; pan</em> to inspect rhizome detail.
             </p>
-            <Link to="/plants" className="mt-4 inline-flex items-center gap-2 text-sm text-primary hover:text-accent transition-colors">
-              <span className="border-b border-current pb-0.5">Explore other Himalayan medicinal plants</span>
+            <Link
+              to="/plants"
+              className="mt-4 inline-flex items-center gap-2 text-sm text-primary hover:text-accent transition-colors"
+            >
+              <span className="border-b border-current pb-0.5">
+                Explore other Himalayan medicinal plants
+              </span>
               <span aria-hidden>→</span>
             </Link>
           </div>
@@ -52,14 +57,16 @@ export function Plant() {
             <p className="mt-5 text-muted-foreground leading-relaxed">
               But this slow-growing species takes years to mature, and its limited distribution
               makes every uprooted plant a permanent loss to the ecosystem. Listed on the{" "}
-              <strong className="text-foreground">IUCN Red List as Endangered</strong>, its
-              survival now depends entirely on coordinated conservation.
+              <strong className="text-foreground">IUCN Red List as Endangered</strong>, its survival
+              now depends entirely on coordinated conservation.
             </p>
 
             <dl className="mt-10 grid sm:grid-cols-2 gap-x-8 gap-y-6">
               {facts.map((f) => (
                 <div key={f.label} className="border-t border-border pt-4">
-                  <dt className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">{f.label}</dt>
+                  <dt className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+                    {f.label}
+                  </dt>
                   <dd className="mt-2 text-foreground text-[15px] leading-snug">{f.value}</dd>
                 </div>
               ))}

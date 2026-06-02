@@ -5,11 +5,33 @@ import community from "@/assets/community.jpg";
 import himalayas from "@/assets/himalayas.jpg";
 
 const shots = [
-  { src: team, alt: "Discovery Pakistan media feature with project director Dr. Rizwana Khanum in the field", caption: "Discovery Pakistan · June 2024", span: "md:col-span-2 md:row-span-2" },
-  { src: himalayas, alt: "Snow-capped Himalayan peaks where Trillium populations were surveyed", caption: "Surveyed regions · Pakistani Himalayas", span: "md:col-span-2" },
-  { src: capacity, alt: "Forest officer training session led by PMNH", caption: "Capacity building · 23 officers trained" },
-  { src: insitu, alt: "In-situ Trillium replanting with community volunteers", caption: "In-situ conservation · Ayubia & Jheka Gali" },
-  { src: community, alt: "Community awareness gathering with elders across multiple valleys", caption: "Community meetings · 32 sessions" },
+  {
+    src: team,
+    alt: "Discovery Pakistan media feature with project director Dr. Rizwana Khanum in the field",
+    caption: "Discovery Pakistan · June 2024",
+    span: "md:col-span-2 md:row-span-2",
+  },
+  {
+    src: himalayas,
+    alt: "Snow-capped Himalayan peaks where Trillium populations were surveyed",
+    caption: "Surveyed regions · Pakistani Himalayas",
+    span: "md:col-span-2",
+  },
+  {
+    src: capacity,
+    alt: "Forest officer training session led by PMNH",
+    caption: "Capacity building · 23 officers trained",
+  },
+  {
+    src: insitu,
+    alt: "In-situ Trillium replanting with community volunteers",
+    caption: "In-situ conservation · Ayubia & Jheka Gali",
+  },
+  {
+    src: community,
+    alt: "Community awareness gathering with elders across multiple valleys",
+    caption: "Community meetings · 32 sessions",
+  },
 ];
 
 export function Field() {
@@ -18,12 +40,10 @@ export function Field() {
       <div className="mx-auto max-w-7xl px-6 lg:px-10">
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 mb-16">
           <div className="max-w-2xl">
-            <p className="text-xs uppercase tracking-[0.3em] text-accent mb-6">
-              In the Field
-            </p>
+            <p className="text-xs uppercase tracking-[0.3em] text-accent mb-6">In the Field</p>
             <h2 className="text-display text-4xl sm:text-5xl lg:text-6xl leading-[1.05] text-balance">
-              From <em className="text-[var(--moss)]">Kashmir</em> to Shangla — every
-              valley, every voice.
+              From <em className="text-[var(--moss)]">Kashmir</em> to Shangla — every valley, every
+              voice.
             </h2>
           </div>
           <a
@@ -35,7 +55,9 @@ export function Field() {
             <span className="border-b border-current pb-0.5">
               Follow @pakistan_mbz on Instagram
             </span>
-            <span aria-hidden className="transition-transform group-hover:translate-x-1">→</span>
+            <span aria-hidden className="transition-transform group-hover:translate-x-1">
+              →
+            </span>
           </a>
         </div>
 
@@ -70,14 +92,11 @@ export function Field() {
             </p>
             <h3 className="text-display text-3xl lg:text-4xl leading-tight">
               A minute in the field —{" "}
-              <span className="italic text-[var(--moss)]">
-                voices from the valley.
-              </span>
+              <span className="italic text-[var(--moss)]">voices from the valley.</span>
             </h3>
             <p className="mt-5 text-muted-foreground leading-relaxed">
-              Watch our team document Trillium populations and converse with
-              custodian communities in the Pakistani Himalayas. Shared directly
-              from our project Instagram.
+              Watch our team document Trillium populations and converse with custodian communities
+              in the Pakistani Himalayas. Shared directly from our project Instagram.
             </p>
             <a
               href="https://www.instagram.com/reel/DD7IC3pP1YE/"
@@ -106,4 +125,3 @@ export function Field() {
     </section>
   );
 }
-

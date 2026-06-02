@@ -20,10 +20,9 @@ export function Hero() {
           <span className="italic text-[oklch(0.85_0.09_60)]"> one valley at a time.</span>
         </h1>
         <p className="fade-up fade-up-delay-2 mt-8 max-w-2xl text-white/85 text-base sm:text-lg leading-relaxed">
-          A field-led conservation initiative protecting{" "}
-          <em>Trillium govanianum</em> — a critically endangered medicinal herb
-          of the Pakistani Himalayas — through science, community stewardship,
-          and intergenerational knowledge.
+          A field-led conservation initiative protecting <em>Trillium govanianum</em> — a critically
+          endangered medicinal herb of the Pakistani Himalayas — through science, community
+          stewardship, and intergenerational knowledge.
         </p>
 
         <div className="fade-up fade-up-delay-3 mt-10 flex flex-wrap items-center gap-4">
