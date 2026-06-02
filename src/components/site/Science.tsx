@@ -1,7 +1,6 @@
 import { BookOpen, ExternalLink, Sparkles } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 
-
 const papers = [
   {
     title:
@@ -12,8 +11,7 @@ const papers = [
     doi: "https://doi.org/10.32859/era.33.49.1-12",
   },
   {
-    title:
-      "Geospatial and Climate-based Conservation Assessment of Trillium govanianum",
+    title: "Geospatial and Climate-based Conservation Assessment of Trillium govanianum",
     authors: "PMNH Conservation Research Group",
     journal: "Manuscript submitted · 2026",
   },
@@ -44,10 +42,9 @@ export function Science() {
             <span className="italic text-[var(--moss)]">community-rooted.</span>
           </h2>
           <p className="mt-6 text-muted-foreground leading-relaxed">
-            Our findings have been documented through ethnobotanical surveys
-            across 24 mountain villages, engaging 120 respondents — household
-            collectors, forestry officers, and herbal traders — across
-            altitudes of 2,000 – 3,300 m.
+            Our findings have been documented through ethnobotanical surveys across 24 mountain
+            villages, engaging 120 respondents — household collectors, forestry officers, and herbal
+            traders — across altitudes of 2,000 – 3,300 m.
           </p>
           <div className="mt-8 flex flex-wrap gap-2">
             {keywords.map((k) => (
@@ -75,12 +72,8 @@ export function Science() {
                   <h3 className="text-display text-xl lg:text-2xl text-foreground leading-snug">
                     {p.title}
                   </h3>
-                  <p className="mt-3 text-sm text-muted-foreground italic">
-                    {p.authors}
-                  </p>
-                  <p className="mt-2 text-xs uppercase tracking-wider text-primary">
-                    {p.journal}
-                  </p>
+                  <p className="mt-3 text-sm text-muted-foreground italic">{p.authors}</p>
+                  <p className="mt-2 text-xs uppercase tracking-wider text-primary">{p.journal}</p>
                   {p.doi && (
                     <div className="mt-4 flex flex-wrap items-center gap-3">
                       <Link
@@ -101,7 +94,6 @@ export function Science() {
                       </a>
                     </div>
                   )}
-
                 </div>
               </div>
             </article>

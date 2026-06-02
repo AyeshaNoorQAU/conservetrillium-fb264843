@@ -61,7 +61,10 @@ function ZoomLightbox({ src, alt, onClose }: { src: string; alt: string; onClose
       if (e.key === "+" || e.key === "=") setScale((s) => Math.min(s + 0.25, 6));
       if (e.key === "-") setScale((s) => Math.max(s - 0.25, 0.5));
       if (e.key.toLowerCase() === "r") {
-        setScale(1); setTx(0); setTy(0); setRot(0);
+        setScale(1);
+        setTx(0);
+        setTy(0);
+        setRot(0);
       }
     };
     window.addEventListener("keydown", onKey);
@@ -85,21 +88,36 @@ function ZoomLightbox({ src, alt, onClose }: { src: string; alt: string; onClose
     setTx(e.clientX - dragging.current.x);
     setTy(e.clientY - dragging.current.y);
   };
-  const onUp = () => { dragging.current = null; };
+  const onUp = () => {
+    dragging.current = null;
+  };
 
-  const reset = () => { setScale(1); setTx(0); setTy(0); setRot(0); };
+  const reset = () => {
+    setScale(1);
+    setTx(0);
+    setTy(0);
+    setRot(0);
+  };
 
   return (
     <div className="fixed inset-0 z-[100] bg-black/95 flex flex-col">
       <div className="flex items-center justify-between px-5 py-3 text-white/90 text-sm border-b border-white/10">
         <span className="truncate">{alt}</span>
         <div className="flex items-center gap-1">
-          <ToolBtn onClick={() => setScale((s) => Math.min(s + 0.25, 6))}><ZoomIn className="w-4 h-4" /></ToolBtn>
-          <ToolBtn onClick={() => setScale((s) => Math.max(s - 0.25, 0.5))}><ZoomOut className="w-4 h-4" /></ToolBtn>
+          <ToolBtn onClick={() => setScale((s) => Math.min(s + 0.25, 6))}>
+            <ZoomIn className="w-4 h-4" />
+          </ToolBtn>
+          <ToolBtn onClick={() => setScale((s) => Math.max(s - 0.25, 0.5))}>
+            <ZoomOut className="w-4 h-4" />
+          </ToolBtn>
           <ToolBtn onClick={() => setRot((r) => r - 15)}>↺</ToolBtn>
           <ToolBtn onClick={() => setRot((r) => r + 15)}>↻</ToolBtn>
-          <ToolBtn onClick={reset}><RotateCcw className="w-4 h-4" /></ToolBtn>
-          <ToolBtn onClick={onClose}><X className="w-4 h-4" /></ToolBtn>
+          <ToolBtn onClick={reset}>
+            <RotateCcw className="w-4 h-4" />
+          </ToolBtn>
+          <ToolBtn onClick={onClose}>
+            <X className="w-4 h-4" />
+          </ToolBtn>
         </div>
       </div>
       <div
@@ -122,7 +140,8 @@ function ZoomLightbox({ src, alt, onClose }: { src: string; alt: string; onClose
         />
       </div>
       <div className="px-5 py-2 text-[11px] text-white/50 flex items-center gap-3 border-t border-white/10">
-        <Move className="w-3 h-3" /> drag to pan · scroll/pinch to zoom · R to reset · Esc to close · scale {scale.toFixed(2)}×
+        <Move className="w-3 h-3" /> drag to pan · scroll/pinch to zoom · R to reset · Esc to close
+        · scale {scale.toFixed(2)}×
       </div>
     </div>
   );

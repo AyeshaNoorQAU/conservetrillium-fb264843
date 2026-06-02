@@ -5,33 +5,27 @@ export function Mission() {
     <section id="mission" className="relative py-28 lg:py-40">
       <div className="mx-auto max-w-7xl px-6 lg:px-10 grid lg:grid-cols-12 gap-12 lg:gap-20 items-center">
         <div className="lg:col-span-7 order-2 lg:order-1">
-          <p className="text-xs uppercase tracking-[0.3em] text-accent mb-6">
-            Our Mission
-          </p>
+          <p className="text-xs uppercase tracking-[0.3em] text-accent mb-6">Our Mission</p>
           <h2 className="text-display text-4xl sm:text-5xl lg:text-6xl text-foreground leading-[1.05] text-balance">
             Where ancient knowledge meets{" "}
             <span className="italic text-[var(--moss)]">modern conservation.</span>
           </h2>
           <div className="mt-8 space-y-5 text-muted-foreground text-base lg:text-lg leading-relaxed max-w-2xl">
             <p>
-              The mountain communities of the Pakistani Himalayas have, for
-              generations, lived alongside one of the world's most precious
-              medicinal flowers — <em>Trillium govanianum</em>, locally known
-              as <em>nag chatri</em>. Today, overharvesting, habitat loss, and
-              climate pressures threaten its survival.
+              The mountain communities of the Pakistani Himalayas have, for generations, lived
+              alongside one of the world's most precious medicinal flowers —{" "}
+              <em>Trillium govanianum</em>, locally known as <em>nag chatri</em>. Today,
+              overharvesting, habitat loss, and climate pressures threaten its survival.
             </p>
             <p>
               Our project — implemented by the{" "}
-              <strong className="text-foreground">
-                Pakistan Museum of Natural History (PMNH)
-              </strong>{" "}
+              <strong className="text-foreground">Pakistan Museum of Natural History (PMNH)</strong>{" "}
               and supported by the{" "}
               <strong className="text-foreground">
                 Mohamed bin Zayed Species Conservation Fund
-              </strong>
-              {" "}— combines rigorous field science, gender-inclusive
-              community engagement, and policy advocacy to safeguard this
-              biocultural heritage for the generations still to come.
+              </strong>{" "}
+              — combines rigorous field science, gender-inclusive community engagement, and policy
+              advocacy to safeguard this biocultural heritage for the generations still to come.
             </p>
           </div>
 

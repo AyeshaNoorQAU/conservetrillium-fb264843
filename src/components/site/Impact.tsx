@@ -49,17 +49,14 @@ export function Impact() {
 
       <div className="mx-auto max-w-7xl px-6 lg:px-10">
         <div className="max-w-3xl">
-          <p className="text-xs uppercase tracking-[0.3em] text-accent mb-6">
-            What we've achieved
-          </p>
+          <p className="text-xs uppercase tracking-[0.3em] text-accent mb-6">What we've achieved</p>
           <h2 className="text-display text-4xl sm:text-5xl lg:text-6xl leading-[1.05] text-balance">
             Two years in the field.{" "}
             <span className="italic text-[var(--moss)]">Lifetimes of impact.</span>
           </h2>
           <p className="mt-6 text-muted-foreground text-lg leading-relaxed">
-            Phase I (April 2024 – April 2025) is complete. Phase II is now
-            underway, extending our reach across the remaining Himalayan
-            valleys through 2026.
+            Phase I (April 2024 – April 2025) is complete. Phase II is now underway, extending our
+            reach across the remaining Himalayan valleys through 2026.
           </p>
         </div>
 
@@ -72,12 +69,8 @@ export function Impact() {
               <div className="text-display text-5xl text-accent/70 group-hover:text-accent transition-colors">
                 {m.n}
               </div>
-              <h3 className="mt-4 text-display text-2xl text-foreground">
-                {m.title}
-              </h3>
-              <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
-                {m.body}
-              </p>
+              <h3 className="mt-4 text-display text-2xl text-foreground">{m.title}</h3>
+              <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{m.body}</p>
             </article>
           ))}
         </div>
