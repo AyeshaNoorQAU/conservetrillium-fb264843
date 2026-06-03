@@ -60,8 +60,8 @@ export function PlantsAdmin() {
     <div className="grid lg:grid-cols-5 gap-6">
       <form onSubmit={save} className="lg:col-span-2 p-6 rounded-2xl bg-card border border-border h-fit space-y-3">
         <h2 className="text-display text-xl mb-2">{editing ? "Edit plant" : "New plant"}</h2>
-        <Field label="Slug (URL id)" v={draft.slug} on={(v) => setDraft({ ...draft, slug: v })} />
-        <Field label="Scientific name" v={draft.scientific_name} on={(v) => setDraft({ ...draft, scientific_name: v })} />
+        <Field label="Slug (URL id)" v={draft.slug ?? ""} on={(v) => setDraft({ ...draft, slug: v })} />
+        <Field label="Scientific name" v={draft.scientific_name ?? ""} on={(v) => setDraft({ ...draft, scientific_name: v })} />
         <Field label="Local / common name" v={draft.local_name ?? ""} on={(v) => setDraft({ ...draft, local_name: v })} />
         <Field label="Family" v={draft.family ?? ""} on={(v) => setDraft({ ...draft, family: v })} />
         <Field label="Altitude" v={draft.altitude ?? ""} on={(v) => setDraft({ ...draft, altitude: v })} />
