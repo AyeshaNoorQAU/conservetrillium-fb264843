@@ -38,6 +38,84 @@ export type Database = {
         }
         Relationships: []
       }
+      gallery_photos: {
+        Row: {
+          alt: string | null
+          caption: string | null
+          created_at: string
+          id: string
+          image_url: string
+          sort_order: number
+        }
+        Insert: {
+          alt?: string | null
+          caption?: string | null
+          created_at?: string
+          id?: string
+          image_url: string
+          sort_order?: number
+        }
+        Update: {
+          alt?: string | null
+          caption?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      plants: {
+        Row: {
+          altitude: string | null
+          created_at: string
+          description: string | null
+          family: string | null
+          id: string
+          image_url: string | null
+          iucn: string | null
+          local_name: string | null
+          scientific_name: string
+          slug: string
+          sort_order: number
+          threats: string | null
+          updated_at: string
+          uses: string | null
+        }
+        Insert: {
+          altitude?: string | null
+          created_at?: string
+          description?: string | null
+          family?: string | null
+          id?: string
+          image_url?: string | null
+          iucn?: string | null
+          local_name?: string | null
+          scientific_name: string
+          slug: string
+          sort_order?: number
+          threats?: string | null
+          updated_at?: string
+          uses?: string | null
+        }
+        Update: {
+          altitude?: string | null
+          created_at?: string
+          description?: string | null
+          family?: string | null
+          id?: string
+          image_url?: string | null
+          iucn?: string | null
+          local_name?: string | null
+          scientific_name?: string
+          slug?: string
+          sort_order?: number
+          threats?: string | null
+          updated_at?: string
+          uses?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -98,6 +176,51 @@ export type Database = {
           message?: string
           name?: string | null
           read_at?: string | null
+        }
+        Relationships: []
+      }
+      team_members: {
+        Row: {
+          badge: string
+          bio: string | null
+          created_at: string
+          email: string | null
+          id: string
+          initials: string | null
+          name: string
+          photo_url: string | null
+          researchgate: string | null
+          role: string | null
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          badge?: string
+          bio?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          initials?: string | null
+          name: string
+          photo_url?: string | null
+          researchgate?: string | null
+          role?: string | null
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          badge?: string
+          bio?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          initials?: string | null
+          name?: string
+          photo_url?: string | null
+          researchgate?: string | null
+          role?: string | null
+          sort_order?: number
+          updated_at?: string
         }
         Relationships: []
       }
