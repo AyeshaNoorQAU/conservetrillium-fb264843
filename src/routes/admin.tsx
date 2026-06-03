@@ -13,8 +13,16 @@ import {
   ShieldAlert,
   ArrowLeft,
   Save,
+  Leaf,
+  Users,
+  Sparkles,
+  Image as ImageIcon,
 } from "lucide-react";
 import { toast } from "sonner";
+import { PlantsAdmin } from "@/components/admin/PlantsAdmin";
+import { TeamAdmin } from "@/components/admin/TeamAdmin";
+import { HeroAdmin } from "@/components/admin/HeroAdmin";
+import { GalleryAdmin } from "@/components/admin/GalleryAdmin";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -85,7 +93,9 @@ function AdminPage() {
 
 function AdminDashboard() {
   const navigate = useNavigate();
-  const [tab, setTab] = useState<"announcements" | "suggestions" | "settings">("announcements");
+  const [tab, setTab] = useState<
+    "announcements" | "suggestions" | "settings" | "plants" | "team" | "hero" | "gallery"
+  >("announcements");
 
   return (
     <div className="min-h-screen bg-secondary/30">
@@ -114,7 +124,11 @@ function AdminDashboard() {
           {(
             [
               { id: "announcements", label: "Announcements", icon: Megaphone },
-              { id: "suggestions", label: "Suggestions inbox", icon: Inbox },
+              { id: "suggestions", label: "Suggestions", icon: Inbox },
+              { id: "hero", label: "Hero copy", icon: Sparkles },
+              { id: "plants", label: "Plants", icon: Leaf },
+              { id: "team", label: "Team", icon: Users },
+              { id: "gallery", label: "Field gallery", icon: ImageIcon },
               { id: "settings", label: "Site settings", icon: Settings },
             ] as const
           ).map((t) => (
@@ -135,6 +149,10 @@ function AdminDashboard() {
         {tab === "announcements" && <AnnouncementsAdmin />}
         {tab === "suggestions" && <SuggestionsAdmin />}
         {tab === "settings" && <SettingsAdmin />}
+        {tab === "hero" && <HeroAdmin />}
+        {tab === "plants" && <PlantsAdmin />}
+        {tab === "team" && <TeamAdmin />}
+        {tab === "gallery" && <GalleryAdmin />}
       </div>
     </div>
   );
