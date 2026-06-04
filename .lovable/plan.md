@@ -1,42 +1,67 @@
 
-## What you'll get
+## Phase 1 — Critical fixes (ship first)
 
-**1. Expanded Field Work gallery (lightbox)**
-- Add 6 new cinematic field photos to the existing mosaic (Himalayan slopes, community elders, Trillium habitat, capacity-building, herbarium work, valley trek).
-- Convert the gallery to a lightbox: click any photo → fullscreen overlay with arrow-key navigation, swipe on mobile, caption, and ESC to close.
-- Existing 3D tilt + Ken Burns motion stays; lightbox is layered on top.
+1. **Fix the "Something went wrong" crash on the homepage.**
+   Root cause: `src/lib/cms.ts` calls `supabase.from(...)` at component render. When the built bundle is missing `VITE_SUPABASE_URL` / `VITE_SUPABASE_PUBLISHABLE_KEY`, the proxy in `src/integrations/supabase/client.ts` throws synchronously and React's error boundary swallows the whole page (Hero, Team, plants, …).
+   Fix: wrap every CMS read in `useCmsList`/`useSiteSettings` with a `try`/error-swallowing `queryFn` and `retry: false`, so the page falls back to the seeded defaults instead of crashing. Verify the env file in the same pass.
 
-**2. Full CMS — extend `/admin` so you can edit live**
+2. **Fix the "How you can help" button.**
+   It currently links to a non-existent `#help` anchor. Build a real `GetInvolved` section (anchor `#help`) on the homepage with four cards: Donate, Volunteer field work, Partner / institutional, Share & advocate — each with a clear CTA. Mount it in `src/routes/index.tsx` between `Impact` and `Field`.
 
-Four new dashboard tabs added next to Announcements / Suggestions / Settings:
+## Phase 2 — Simplified, multi-provider sign-in
 
-- **Plants** — add / edit / delete entries on `/plants` (scientific name, common name, family, habitat, properties, conservation status, image upload).
-- **Team** — add / edit / remove team members and tributes (name, role, bio, photo upload, ResearchGate/social links, "founder" / "supervisor" / "project-head" badge).
-- **Hero copy** — edit homepage hero headline, tagline, eyebrow text, and CTA label/href without touching code.
-- **Field gallery** — upload new gallery photos, write captions/alt text, reorder, delete. Photos go straight into the lightbox grid.
+Rebuild `/login` as a single clean screen ("Welcome back to ConserveTrillium") with one-tap buttons in this order: **Google**, **Apple**, **GitHub**, then an email field, then **Continue with phone (SMS)**. Remove the current sign-up/sign-in toggle — auto-create the account on first sign-in.
 
-All four use the same pattern: storage bucket for images + a Postgres table for content, RLS so the public reads and only admins write.
+- **Google + Apple**: enable via Lovable Cloud managed social auth (`supabase--configure_social_auth providers: ["google","apple"]`). No keys needed from you.
+- **Email**: keep magic-link only (passwordless), drops the password field entirely. Simpler than today.
+- **GitHub**: NOT in Lovable Cloud's managed providers. To enable it I'll need you to register a GitHub OAuth App (Settings → Developer settings → OAuth Apps on github.com) and paste the Client ID + Client Secret — I'll store them as secrets and wire the Supabase GitHub provider. I'll add a "Coming soon" state on the GitHub button until you provide them.
+- **Phone (SMS)**: Supabase needs an SMS provider. The cheapest path is Twilio — I'll add the Twilio connector. Until your Twilio number is verified, the SMS button will show "Coming soon" too.
 
-**3. Wiring on the public site**
-- `Hero.tsx`, `Team.tsx`, `Plant.tsx` (`/plants`), and `Field.tsx` switch from hardcoded content to reading from the database, with the current hardcoded values seeded as defaults so nothing visually changes until you edit.
-- Lovable Cloud storage bucket (`site-media`, public read) holds all uploaded images; admin uploads via the dashboard.
+The Nav button stays as today (Sign in → Account/Admin), but the page itself becomes the one-tap surface.
 
-## Technical details
+## Phase 3 — Daily-use community foundation
 
-**Database (migration)**
-- `plants` table: `id, slug, scientific_name, common_name, family, habitat, properties (text[]), status, image_url, sort_order, created_at`
-- `team_members` table: `id, name, role, bio, photo_url, badge (founder|supervisor|project_head|member), socials (jsonb), sort_order`
-- `gallery_photos` table: `id, image_url, caption, alt, sort_order, created_at`
-- Extend `site_settings` with hero keys: `hero_eyebrow`, `hero_headline`, `hero_tagline`, `hero_cta_label`, `hero_cta_href` (seeded with current copy).
-- RLS: public SELECT on all three tables; INSERT/UPDATE/DELETE gated by `has_role(auth.uid(), 'admin')`. GRANTs to anon (SELECT) + authenticated + service_role.
-- Storage bucket `site-media` (public), with RLS policies: public SELECT, admin-only INSERT/UPDATE/DELETE.
-- Seed rows from current hardcoded plant/team/gallery content so the live site is unchanged until edited.
+Big surface, so I'll build it in this order. Each step is shippable on its own; we can stop at any point.
 
-**Frontend**
-- New `src/components/site/Lightbox.tsx` — keyboard nav, focus trap, framer-motion fade/scale.
-- New admin sub-components: `PlantsAdmin.tsx`, `TeamAdmin.tsx`, `HeroAdmin.tsx`, `GalleryAdmin.tsx` (file inputs upload to `site-media` then save the public URL to the row).
-- `Field.tsx`, `Team.tsx`, `Hero.tsx`, `routes/plants.tsx` refactored to fetch from Supabase with TanStack Query; show seeded data on first load.
-- Tab navigation in `routes/admin.tsx` expanded to 7 tabs.
+### 3a. Plant of the Day + streaks
+- New `plant_of_day` table (date, plant_id, blurb, fact). Daily server function picks a plant.
+- Hero gains a "Today's plant" capsule with a "Mark as learned" button.
+- `user_streaks` table (user_id, current_streak, longest_streak, last_seen_date). Streak ring + badge in the Nav.
+- Public can view; signed-in users get credit and streak persistence.
 
-**Out of scope (say the word to add)**
-- Multilingual content, draft/preview workflow, version history, per-section role permissions beyond admin/non-admin.
+### 3b. Community Feed (Facebook-style, plant-focused)
+- New tables: `posts` (author, plant_id?, body, photo_url, lat, lng), `post_likes`, `post_comments`.
+- `/feed` route: composer (photo + GPS + plant tag), infinite scroll, like, comment.
+- Photos via existing `site-media` Storage bucket.
+- RLS: anyone can read public posts; only the author can edit/delete; admins can moderate.
+
+### 3c. AI Plant ID + Chat Botanist
+- Uses Lovable AI Gateway (no key from you needed).
+- `/identify`: upload a photo → `google/gemini-2.5-flash` returns species guess + confidence + conservation note. Saves the result to the user's history.
+- "Ask the botanist" chat drawer (server route `/api/chat`) streaming `google/gemini-3-flash-preview`, system-primed on Himalayan medicinal flora and your publication.
+
+### 3d. Live notifications + Direct Messages (WhatsApp-style)
+- Tables: `notifications`, `conversations`, `messages`. Realtime enabled.
+- Bell icon in Nav shows unread count (new comments, sighting near you, DM).
+- DM drawer for one-to-one chat between signed-in users; admin can broadcast.
+
+## Phase 4 — Polish
+- New unified "Account" page consolidating profile, streak, saved plants, my posts, settings.
+- Onboarding micro-tour the first time a signed-in user lands on the app.
+- App-shell PWA install prompt so it feels like a real daily-use app.
+
+## Out of scope (call out explicitly)
+- Video calls.
+- End-to-end encryption on DMs (standard RLS + TLS only).
+- Native mobile app (web/PWA only — Lovable doesn't build native iOS/Android).
+- Multilingual content.
+
+## Technical notes (for transparency, not required reading)
+- `src/lib/cms.ts` queries become resilient: each `useQuery` gets `{ retry: false, queryFn: async () => { try { … } catch { return null } } }` so a missing/forbidden Supabase call degrades to seeded defaults, not a thrown render.
+- All new feature tables follow the project standard: explicit `GRANT`s, RLS on, policies scoped to `auth.uid()`, `has_role(auth.uid(), 'admin')` for admin overrides.
+- New AI server logic uses `createServerFn` (Lovable AI Gateway), not Supabase Edge Functions.
+- Realtime is enabled per-table with `ALTER PUBLICATION supabase_realtime ADD TABLE …`.
+- GitHub provider and Twilio SMS will be wired only after you provide credentials — I'll prompt you at that moment.
+
+## What I need from you to start
+Just approval. I'll do Phase 1 + Phase 2 (Google, Apple, Email magic link) in the first build pass. After it's live we'll decide which Phase 3 block to ship next — I won't build them all in one go because reviewing them together would be unmanageable.
