@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
 
-// Client-side fetch hook that returns null during SSR/initial render to avoid
-// hydration mismatches. Components should render their default content first,
-// then swap when `data` arrives.
+// Client-side fetch hook. Uses a dynamic import + try/catch so a missing
+// Supabase env var or transient network error degrades to seeded defaults
+// instead of crashing the whole page.
 export function useCmsList<T>(
   table: "plants" | "team_members" | "gallery_photos",
   orderBy = "sort_order",
@@ -11,13 +10,19 @@ export function useCmsList<T>(
   const [data, setData] = useState<T[] | null>(null);
   useEffect(() => {
     let cancelled = false;
-    supabase
-      .from(table)
-      .select("*")
-      .order(orderBy, { ascending: true })
-      .then(({ data }) => {
+    (async () => {
+      try {
+        const { supabase } = await import("@/integrations/supabase/client");
+        const { data } = await supabase
+          .from(table)
+          .select("*")
+          .order(orderBy, { ascending: true });
         if (!cancelled && data) setData(data as T[]);
-      });
+      } catch (err) {
+        // Swallow: defaults remain visible.
+        console.warn(`[cms] ${table} fetch failed; using defaults.`, err);
+      }
+    })();
     return () => {
       cancelled = true;
     };
@@ -29,15 +34,18 @@ export function useSiteSettings() {
   const [map, setMap] = useState<Record<string, string> | null>(null);
   useEffect(() => {
     let cancelled = false;
-    supabase
-      .from("site_settings")
-      .select("key,value")
-      .then(({ data }) => {
+    (async () => {
+      try {
+        const { supabase } = await import("@/integrations/supabase/client");
+        const { data } = await supabase.from("site_settings").select("key,value");
         if (cancelled || !data) return;
         const m: Record<string, string> = {};
         for (const r of data as { key: string; value: string }[]) m[r.key] = r.value;
         setMap(m);
-      });
+      } catch (err) {
+        console.warn("[cms] site_settings fetch failed; using defaults.", err);
+      }
+    })();
     return () => {
       cancelled = true;
     };

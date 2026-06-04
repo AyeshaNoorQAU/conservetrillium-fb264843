@@ -8,6 +8,7 @@ import { Field } from "@/components/site/Field";
 import { Science } from "@/components/site/Science";
 import { Announcements } from "@/components/site/Announcements";
 import { Team } from "@/components/site/Team";
+import { GetInvolved } from "@/components/site/GetInvolved";
 import { Contact } from "@/components/site/Contact";
 import { Footer } from "@/components/site/Footer";
 
@@ -46,6 +47,7 @@ function Index() {
         <Science />
         <Announcements />
         <Team />
+        <GetInvolved />
         <Contact />
       </main>
       <Footer />
