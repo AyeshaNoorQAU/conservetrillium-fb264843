@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
-import { Leaf, Menu, X, Shield } from "lucide-react";
+import { Leaf, Menu, X, Shield, Flame } from "lucide-react";
 import { Link, useLocation } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { useAuth } from "@/hooks/use-auth";
+import { getMyStreak } from "@/lib/streaks.functions";
 
 const sectionLinks = [
   { href: "#mission", label: "Mission" },
@@ -23,6 +26,14 @@ export function Nav() {
   const loc = useLocation();
   const onHome = loc.pathname === "/";
   const { user, isAdmin } = useAuth();
+  const fetchStreak = useServerFn(getMyStreak);
+  const streakQ = useQuery({
+    queryKey: ["my-streak"],
+    queryFn: () => fetchStreak(),
+    enabled: !!user,
+    retry: false,
+  });
+  const streak = streakQ.data?.current ?? 0;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
