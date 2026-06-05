@@ -65,6 +65,38 @@ export type Database = {
         }
         Relationships: []
       }
+      plant_of_day: {
+        Row: {
+          blurb: string | null
+          created_at: string
+          fact: string | null
+          for_date: string
+          plant_id: string
+        }
+        Insert: {
+          blurb?: string | null
+          created_at?: string
+          fact?: string | null
+          for_date: string
+          plant_id: string
+        }
+        Update: {
+          blurb?: string | null
+          created_at?: string
+          fact?: string | null
+          for_date?: string
+          plant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "plant_of_day_plant_id_fkey"
+            columns: ["plant_id"]
+            isOneToOne: false
+            referencedRelation: "plants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       plants: {
         Row: {
           altitude: string | null
@@ -115,6 +147,111 @@ export type Database = {
           uses?: string | null
         }
         Relationships: []
+      }
+      post_comments: {
+        Row: {
+          author_id: string
+          body: string
+          created_at: string
+          id: string
+          post_id: string
+        }
+        Insert: {
+          author_id: string
+          body: string
+          created_at?: string
+          id?: string
+          post_id: string
+        }
+        Update: {
+          author_id?: string
+          body?: string
+          created_at?: string
+          id?: string
+          post_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      post_likes: {
+        Row: {
+          created_at: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_likes_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      posts: {
+        Row: {
+          author_id: string
+          body: string
+          created_at: string
+          hidden: boolean
+          id: string
+          lat: number | null
+          lng: number | null
+          photo_url: string | null
+          plant_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          author_id: string
+          body: string
+          created_at?: string
+          hidden?: boolean
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          photo_url?: string | null
+          plant_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string
+          body?: string
+          created_at?: string
+          hidden?: boolean
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          photo_url?: string | null
+          plant_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "posts_plant_id_fkey"
+            columns: ["plant_id"]
+            isOneToOne: false
+            referencedRelation: "plants"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -224,6 +361,35 @@ export type Database = {
         }
         Relationships: []
       }
+      user_plant_log: {
+        Row: {
+          created_at: string
+          log_date: string
+          plant_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          log_date: string
+          plant_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          log_date?: string
+          plant_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_plant_log_plant_id_fkey"
+            columns: ["plant_id"]
+            isOneToOne: false
+            referencedRelation: "plants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -241,6 +407,30 @@ export type Database = {
           created_at?: string
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_streaks: {
+        Row: {
+          current_streak: number
+          last_seen_date: string | null
+          longest_streak: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          current_streak?: number
+          last_seen_date?: string | null
+          longest_streak?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          current_streak?: number
+          last_seen_date?: string | null
+          longest_streak?: number
+          updated_at?: string
           user_id?: string
         }
         Relationships: []

@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
-import { Leaf, Menu, X, Shield } from "lucide-react";
+import { Leaf, Menu, X, Shield, Flame } from "lucide-react";
 import { Link, useLocation } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { useAuth } from "@/hooks/use-auth";
+import { getMyStreak } from "@/lib/streaks.functions";
 
 const sectionLinks = [
   { href: "#mission", label: "Mission" },
@@ -23,6 +26,14 @@ export function Nav() {
   const loc = useLocation();
   const onHome = loc.pathname === "/";
   const { user, isAdmin } = useAuth();
+  const fetchStreak = useServerFn(getMyStreak);
+  const streakQ = useQuery({
+    queryKey: ["my-streak"],
+    queryFn: () => fetchStreak(),
+    enabled: !!user,
+    retry: false,
+  });
+  const streak = streakQ.data?.current ?? 0;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -75,6 +86,19 @@ export function Nav() {
         </nav>
 
         <div className="hidden sm:flex items-center gap-3">
+          {user && streak > 0 && (
+            <Link
+              to="/streak"
+              title={`${streak}-day streak`}
+              className={`hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm transition-all ${
+                opaque
+                  ? "bg-[oklch(0.97_0.04_60)] text-[oklch(0.45_0.16_50)] hover:bg-[oklch(0.94_0.06_60)]"
+                  : "bg-white/15 text-white backdrop-blur hover:bg-white/25"
+              }`}
+            >
+              <Flame className="w-3.5 h-3.5" /> {streak}
+            </Link>
+          )}
           <Link
             to={user ? "/admin" : "/login"}
             className={`hidden md:inline-flex items-center gap-2 px-4 py-2 text-sm rounded-full transition-all ${
