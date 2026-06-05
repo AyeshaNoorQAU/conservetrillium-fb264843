@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as StudentLabRouteImport } from './routes/student-lab'
+import { Route as StreakRouteImport } from './routes/streak'
 import { Route as PublicationRouteImport } from './routes/publication'
 import { Route as PlantsRouteImport } from './routes/plants'
 import { Route as LoginRouteImport } from './routes/login'
@@ -19,6 +20,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const StudentLabRoute = StudentLabRouteImport.update({
   id: '/student-lab',
   path: '/student-lab',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StreakRoute = StreakRouteImport.update({
+  id: '/streak',
+  path: '/streak',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PublicationRoute = PublicationRouteImport.update({
@@ -53,6 +59,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/plants': typeof PlantsRoute
   '/publication': typeof PublicationRoute
+  '/streak': typeof StreakRoute
   '/student-lab': typeof StudentLabRoute
 }
 export interface FileRoutesByTo {
@@ -61,6 +68,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/plants': typeof PlantsRoute
   '/publication': typeof PublicationRoute
+  '/streak': typeof StreakRoute
   '/student-lab': typeof StudentLabRoute
 }
 export interface FileRoutesById {
@@ -70,6 +78,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/plants': typeof PlantsRoute
   '/publication': typeof PublicationRoute
+  '/streak': typeof StreakRoute
   '/student-lab': typeof StudentLabRoute
 }
 export interface FileRouteTypes {
@@ -80,9 +89,17 @@ export interface FileRouteTypes {
     | '/login'
     | '/plants'
     | '/publication'
+    | '/streak'
     | '/student-lab'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/login' | '/plants' | '/publication' | '/student-lab'
+  to:
+    | '/'
+    | '/admin'
+    | '/login'
+    | '/plants'
+    | '/publication'
+    | '/streak'
+    | '/student-lab'
   id:
     | '__root__'
     | '/'
@@ -90,6 +107,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/plants'
     | '/publication'
+    | '/streak'
     | '/student-lab'
   fileRoutesById: FileRoutesById
 }
@@ -99,6 +117,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   PlantsRoute: typeof PlantsRoute
   PublicationRoute: typeof PublicationRoute
+  StreakRoute: typeof StreakRoute
   StudentLabRoute: typeof StudentLabRoute
 }
 
@@ -109,6 +128,13 @@ declare module '@tanstack/react-router' {
       path: '/student-lab'
       fullPath: '/student-lab'
       preLoaderRoute: typeof StudentLabRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/streak': {
+      id: '/streak'
+      path: '/streak'
+      fullPath: '/streak'
+      preLoaderRoute: typeof StreakRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/publication': {
@@ -155,8 +181,19 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   PlantsRoute: PlantsRoute,
   PublicationRoute: PublicationRoute,
+  StreakRoute: StreakRoute,
   StudentLabRoute: StudentLabRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
