@@ -9,6 +9,7 @@ import { Science } from "@/components/site/Science";
 import { Announcements } from "@/components/site/Announcements";
 import { Team } from "@/components/site/Team";
 import { GetInvolved } from "@/components/site/GetInvolved";
+import { PlantOfDay } from "@/components/site/PlantOfDay";
 import { Contact } from "@/components/site/Contact";
 import { Footer } from "@/components/site/Footer";
 
@@ -40,6 +41,7 @@ function Index() {
       <Nav />
       <main>
         <Hero />
+        <PlantOfDay />
         <Mission />
         <Plant />
         <Impact />
