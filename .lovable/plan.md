@@ -1,67 +1,85 @@
 
-## Phase 1 — Critical fixes (ship first)
+# Phase 3 — Daily-use app, all four blocks
 
-1. **Fix the "Something went wrong" crash on the homepage.**
-   Root cause: `src/lib/cms.ts` calls `supabase.from(...)` at component render. When the built bundle is missing `VITE_SUPABASE_URL` / `VITE_SUPABASE_PUBLISHABLE_KEY`, the proxy in `src/integrations/supabase/client.ts` throws synchronously and React's error boundary swallows the whole page (Hero, Team, plants, …).
-   Fix: wrap every CMS read in `useCmsList`/`useSiteSettings` with a `try`/error-swallowing `queryFn` and `retry: false`, so the page falls back to the seeded defaults instead of crashing. Verify the env file in the same pass.
+You picked all four. I'll build them in this order so each one is shippable and reviewable on its own. After every block I'll pause briefly so you can poke at it before I start the next.
 
-2. **Fix the "How you can help" button.**
-   It currently links to a non-existent `#help` anchor. Build a real `GetInvolved` section (anchor `#help`) on the homepage with four cards: Donate, Volunteer field work, Partner / institutional, Share & advocate — each with a clear CTA. Mount it in `src/routes/index.tsx` between `Impact` and `Field`.
+---
 
-## Phase 2 — Simplified, multi-provider sign-in
+## Block A — Plant of the Day + streaks (smallest, ship first)
 
-Rebuild `/login` as a single clean screen ("Welcome back to ConserveTrillium") with one-tap buttons in this order: **Google**, **Apple**, **GitHub**, then an email field, then **Continue with phone (SMS)**. Remove the current sign-up/sign-in toggle — auto-create the account on first sign-in.
+**What you'll see**
+- A new "Today's plant" capsule on the homepage hero with photo, name, one-line fact, and a **Mark as learned** button (signed-in only; signed-out users see "Sign in to start a streak").
+- A streak ring + number badge in the Nav (next to the Sign in / Account button) showing current streak.
+- A tiny `/streak` page with current streak, longest streak, and a 30-day dot calendar.
 
-- **Google + Apple**: enable via Lovable Cloud managed social auth (`supabase--configure_social_auth providers: ["google","apple"]`). No keys needed from you.
-- **Email**: keep magic-link only (passwordless), drops the password field entirely. Simpler than today.
-- **GitHub**: NOT in Lovable Cloud's managed providers. To enable it I'll need you to register a GitHub OAuth App (Settings → Developer settings → OAuth Apps on github.com) and paste the Client ID + Client Secret — I'll store them as secrets and wire the Supabase GitHub provider. I'll add a "Coming soon" state on the GitHub button until you provide them.
-- **Phone (SMS)**: Supabase needs an SMS provider. The cheapest path is Twilio — I'll add the Twilio connector. Until your Twilio number is verified, the SMS button will show "Coming soon" too.
+**Database**
+- `plant_of_day` (date PK, plant_id FK, blurb, fact). One row per day.
+- `user_streaks` (user_id PK, current_streak, longest_streak, last_seen_date).
+- `user_plant_log` (user_id, date, plant_id) — composite PK (user_id, date) so a user can only credit once per day.
+- All three: RLS on, GRANTs to authenticated + service_role, public SELECT on `plant_of_day` only.
 
-The Nav button stays as today (Sign in → Account/Admin), but the page itself becomes the one-tap surface.
+**Server**
+- `pickPlantOfDay` cron route at `/api/public/hooks/plant-of-day` (pg_cron daily at 00:05 UTC). Picks a plant that hasn't been used in the last 30 days.
+- `markLearned` server fn (auth required): inserts into `user_plant_log`, bumps streak if `last_seen_date = today - 1`, resets to 1 otherwise.
 
-## Phase 3 — Daily-use community foundation
+---
 
-Big surface, so I'll build it in this order. Each step is shippable on its own; we can stop at any point.
+## Block B — Community Feed (Facebook-style, plant-focused)
 
-### 3a. Plant of the Day + streaks
-- New `plant_of_day` table (date, plant_id, blurb, fact). Daily server function picks a plant.
-- Hero gains a "Today's plant" capsule with a "Mark as learned" button.
-- `user_streaks` table (user_id, current_streak, longest_streak, last_seen_date). Streak ring + badge in the Nav.
-- Public can view; signed-in users get credit and streak persistence.
+**What you'll see**
+- New `/feed` route in the main nav.
+- Composer at top: textarea + optional photo + optional plant tag (dropdown of existing plants) + optional GPS (browser geolocation, opt-in).
+- Infinite-scroll list of post cards: author avatar/name, time, body, photo, plant chip, like button, comment count, "view comments" expander.
+- Comment thread inline. Edit/delete own posts. Admin can hide any post.
 
-### 3b. Community Feed (Facebook-style, plant-focused)
-- New tables: `posts` (author, plant_id?, body, photo_url, lat, lng), `post_likes`, `post_comments`.
-- `/feed` route: composer (photo + GPS + plant tag), infinite scroll, like, comment.
-- Photos via existing `site-media` Storage bucket.
-- RLS: anyone can read public posts; only the author can edit/delete; admins can moderate.
+**Database**
+- `posts` (id, author_id, plant_id?, body, photo_url?, lat?, lng?, created_at, hidden bool).
+- `post_likes` (post_id, user_id) — composite PK.
+- `post_comments` (id, post_id, author_id, body, created_at).
+- RLS: anyone signed-in can read non-hidden posts; only author can update/delete own; admin can update `hidden`.
+- Photos go into existing `site-media` bucket under `posts/{user_id}/{uuid}.jpg`.
 
-### 3c. AI Plant ID + Chat Botanist
-- Uses Lovable AI Gateway (no key from you needed).
-- `/identify`: upload a photo → `google/gemini-2.5-flash` returns species guess + confidence + conservation note. Saves the result to the user's history.
-- "Ask the botanist" chat drawer (server route `/api/chat`) streaming `google/gemini-3-flash-preview`, system-primed on Himalayan medicinal flora and your publication.
+---
 
-### 3d. Live notifications + Direct Messages (WhatsApp-style)
-- Tables: `notifications`, `conversations`, `messages`. Realtime enabled.
-- Bell icon in Nav shows unread count (new comments, sighting near you, DM).
-- DM drawer for one-to-one chat between signed-in users; admin can broadcast.
+## Block C — AI Plant ID + Chat Botanist (Lovable AI Gateway, no keys from you)
 
-## Phase 4 — Polish
-- New unified "Account" page consolidating profile, streak, saved plants, my posts, settings.
-- Onboarding micro-tour the first time a signed-in user lands on the app.
-- App-shell PWA install prompt so it feels like a real daily-use app.
+**What you'll see**
+- New `/identify` route: drop a photo → spinner → result card with species guess, confidence, conservation note, and a "Save to my sightings" button.
+- A floating "Ask the botanist" chat button bottom-right of the site → opens a drawer with streamed responses, system-primed on Himalayan medicinal flora + the project's publication.
 
-## Out of scope (call out explicitly)
-- Video calls.
-- End-to-end encryption on DMs (standard RLS + TLS only).
-- Native mobile app (web/PWA only — Lovable doesn't build native iOS/Android).
-- Multilingual content.
+**Server (TanStack)**
+- `identifyPlant` server fn: accepts base64 image, calls `google/gemini-3-flash-preview` (multimodal) via Lovable AI Gateway, returns `{species, confidence, note}`. Stores result in `plant_identifications` table.
+- `/api/chat` server route: streaming chat via AI SDK + `createLovableAiGatewayProvider`, default model `google/gemini-3-flash-preview`, system prompt scoped to Himalayan flora.
+- `plant_identifications` (id, user_id, image_url, species, confidence, note, created_at). RLS: own rows only.
 
-## Technical notes (for transparency, not required reading)
-- `src/lib/cms.ts` queries become resilient: each `useQuery` gets `{ retry: false, queryFn: async () => { try { … } catch { return null } } }` so a missing/forbidden Supabase call degrades to seeded defaults, not a thrown render.
-- All new feature tables follow the project standard: explicit `GRANT`s, RLS on, policies scoped to `auth.uid()`, `has_role(auth.uid(), 'admin')` for admin overrides.
-- New AI server logic uses `createServerFn` (Lovable AI Gateway), not Supabase Edge Functions.
-- Realtime is enabled per-table with `ALTER PUBLICATION supabase_realtime ADD TABLE …`.
-- GitHub provider and Twilio SMS will be wired only after you provide credentials — I'll prompt you at that moment.
+---
 
-## What I need from you to start
-Just approval. I'll do Phase 1 + Phase 2 (Google, Apple, Email magic link) in the first build pass. After it's live we'll decide which Phase 3 block to ship next — I won't build them all in one go because reviewing them together would be unmanageable.
+## Block D — Live notifications + Direct Messages (WhatsApp-style)
+
+**What you'll see**
+- Bell icon in Nav with unread red dot. Click opens a dropdown listing recent notifications (new comment on your post, new DM, admin broadcast).
+- New `/messages` route: left rail of conversations, right pane of messages, composer at bottom. Realtime updates with no refresh.
+- Click any author's name anywhere → "Message" button → opens or starts a DM.
+
+**Database**
+- `notifications` (id, user_id, kind, payload jsonb, read_at, created_at).
+- `conversations` (id, created_at), `conversation_members` (conversation_id, user_id) — composite PK.
+- `messages` (id, conversation_id, author_id, body, created_at).
+- Realtime: `ALTER PUBLICATION supabase_realtime ADD TABLE notifications, messages;`
+- RLS: a user can read notifications where `user_id = auth.uid()`; can read messages where they are a member of the conversation.
+
+---
+
+## Cross-cutting / constraints
+
+- All new tables follow project standard: explicit `GRANT`s, RLS on, `auth.uid()`-scoped policies, `has_role(auth.uid(), 'admin')` overrides for moderation.
+- AI calls use `createServerFn` + Lovable AI Gateway (no key from you needed). `LOVABLE_API_KEY` already exists.
+- New routes are public for read-only views and gated with inline "Sign in to X" CTAs for write actions — no full `_authenticated/` subtree, to keep OG sharing intact.
+- Photo uploads reuse the existing private `site-media` bucket with new path prefixes (`posts/`, `identifications/`).
+- No video calls, no E2E encryption on DMs, no native mobile, no multilingual — same out-of-scope items as before.
+
+## Order of work
+
+I'll do **Block A** first (smallest, gives the daily habit hook). After it's live and you've poked at it, I'll do **B**, then **C**, then **D**. Each block is one migration + the UI + a short test pass.
+
+Approve and I'll start with Block A.
