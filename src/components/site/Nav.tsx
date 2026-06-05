@@ -86,6 +86,19 @@ export function Nav() {
         </nav>
 
         <div className="hidden sm:flex items-center gap-3">
+          {user && streak > 0 && (
+            <Link
+              to="/streak"
+              title={`${streak}-day streak`}
+              className={`hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm transition-all ${
+                opaque
+                  ? "bg-[oklch(0.97_0.04_60)] text-[oklch(0.45_0.16_50)] hover:bg-[oklch(0.94_0.06_60)]"
+                  : "bg-white/15 text-white backdrop-blur hover:bg-white/25"
+              }`}
+            >
+              <Flame className="w-3.5 h-3.5" /> {streak}
+            </Link>
+          )}
           <Link
             to={user ? "/admin" : "/login"}
             className={`hidden md:inline-flex items-center gap-2 px-4 py-2 text-sm rounded-full transition-all ${
