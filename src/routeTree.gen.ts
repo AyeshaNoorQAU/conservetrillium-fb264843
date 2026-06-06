@@ -13,6 +13,7 @@ import { Route as StudentLabRouteImport } from './routes/student-lab'
 import { Route as StreakRouteImport } from './routes/streak'
 import { Route as PublicationRouteImport } from './routes/publication'
 import { Route as PlantsRouteImport } from './routes/plants'
+import { Route as MessagesRouteImport } from './routes/messages'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as IdentifyRouteImport } from './routes/identify'
 import { Route as FeedRouteImport } from './routes/feed'
@@ -38,6 +39,11 @@ const PublicationRoute = PublicationRouteImport.update({
 const PlantsRoute = PlantsRouteImport.update({
   id: '/plants',
   path: '/plants',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MessagesRoute = MessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -77,6 +83,7 @@ export interface FileRoutesByFullPath {
   '/feed': typeof FeedRoute
   '/identify': typeof IdentifyRoute
   '/login': typeof LoginRoute
+  '/messages': typeof MessagesRoute
   '/plants': typeof PlantsRoute
   '/publication': typeof PublicationRoute
   '/streak': typeof StreakRoute
@@ -89,6 +96,7 @@ export interface FileRoutesByTo {
   '/feed': typeof FeedRoute
   '/identify': typeof IdentifyRoute
   '/login': typeof LoginRoute
+  '/messages': typeof MessagesRoute
   '/plants': typeof PlantsRoute
   '/publication': typeof PublicationRoute
   '/streak': typeof StreakRoute
@@ -102,6 +110,7 @@ export interface FileRoutesById {
   '/feed': typeof FeedRoute
   '/identify': typeof IdentifyRoute
   '/login': typeof LoginRoute
+  '/messages': typeof MessagesRoute
   '/plants': typeof PlantsRoute
   '/publication': typeof PublicationRoute
   '/streak': typeof StreakRoute
@@ -116,6 +125,7 @@ export interface FileRouteTypes {
     | '/feed'
     | '/identify'
     | '/login'
+    | '/messages'
     | '/plants'
     | '/publication'
     | '/streak'
@@ -128,6 +138,7 @@ export interface FileRouteTypes {
     | '/feed'
     | '/identify'
     | '/login'
+    | '/messages'
     | '/plants'
     | '/publication'
     | '/streak'
@@ -140,6 +151,7 @@ export interface FileRouteTypes {
     | '/feed'
     | '/identify'
     | '/login'
+    | '/messages'
     | '/plants'
     | '/publication'
     | '/streak'
@@ -153,6 +165,7 @@ export interface RootRouteChildren {
   FeedRoute: typeof FeedRoute
   IdentifyRoute: typeof IdentifyRoute
   LoginRoute: typeof LoginRoute
+  MessagesRoute: typeof MessagesRoute
   PlantsRoute: typeof PlantsRoute
   PublicationRoute: typeof PublicationRoute
   StreakRoute: typeof StreakRoute
@@ -188,6 +201,13 @@ declare module '@tanstack/react-router' {
       path: '/plants'
       fullPath: '/plants'
       preLoaderRoute: typeof PlantsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/messages': {
+      id: '/messages'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof MessagesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -241,6 +261,7 @@ const rootRouteChildren: RootRouteChildren = {
   FeedRoute: FeedRoute,
   IdentifyRoute: IdentifyRoute,
   LoginRoute: LoginRoute,
+  MessagesRoute: MessagesRoute,
   PlantsRoute: PlantsRoute,
   PublicationRoute: PublicationRoute,
   StreakRoute: StreakRoute,
@@ -250,3 +271,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
