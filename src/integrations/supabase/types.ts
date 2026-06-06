@@ -65,6 +65,36 @@ export type Database = {
         }
         Relationships: []
       }
+      plant_identifications: {
+        Row: {
+          confidence: string | null
+          created_at: string
+          id: string
+          image_url: string | null
+          note: string | null
+          species: string | null
+          user_id: string
+        }
+        Insert: {
+          confidence?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          note?: string | null
+          species?: string | null
+          user_id: string
+        }
+        Update: {
+          confidence?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          note?: string | null
+          species?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       plant_of_day: {
         Row: {
           blurb: string | null
