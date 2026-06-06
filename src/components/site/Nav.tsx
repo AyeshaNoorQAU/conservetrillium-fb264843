@@ -16,6 +16,8 @@ const sectionLinks = [
 
 const pageLinks = [
   { to: "/plants", label: "Plants" },
+  { to: "/feed", label: "Feed" },
+  { to: "/identify", label: "Identify" },
   { to: "/publication", label: "Publication" },
   { to: "/student-lab", label: "Student Lab" },
 ];
