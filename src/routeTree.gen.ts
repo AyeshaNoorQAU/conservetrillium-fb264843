@@ -13,9 +13,13 @@ import { Route as StudentLabRouteImport } from './routes/student-lab'
 import { Route as StreakRouteImport } from './routes/streak'
 import { Route as PublicationRouteImport } from './routes/publication'
 import { Route as PlantsRouteImport } from './routes/plants'
+import { Route as MessagesRouteImport } from './routes/messages'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as IdentifyRouteImport } from './routes/identify'
+import { Route as FeedRouteImport } from './routes/feed'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiChatRouteImport } from './routes/api/chat'
 
 const StudentLabRoute = StudentLabRouteImport.update({
   id: '/student-lab',
@@ -37,9 +41,24 @@ const PlantsRoute = PlantsRouteImport.update({
   path: '/plants',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MessagesRoute = MessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IdentifyRoute = IdentifyRouteImport.update({
+  id: '/identify',
+  path: '/identify',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FeedRoute = FeedRouteImport.update({
+  id: '/feed',
+  path: '/feed',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -52,73 +71,106 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/feed': typeof FeedRoute
+  '/identify': typeof IdentifyRoute
   '/login': typeof LoginRoute
+  '/messages': typeof MessagesRoute
   '/plants': typeof PlantsRoute
   '/publication': typeof PublicationRoute
   '/streak': typeof StreakRoute
   '/student-lab': typeof StudentLabRoute
+  '/api/chat': typeof ApiChatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/feed': typeof FeedRoute
+  '/identify': typeof IdentifyRoute
   '/login': typeof LoginRoute
+  '/messages': typeof MessagesRoute
   '/plants': typeof PlantsRoute
   '/publication': typeof PublicationRoute
   '/streak': typeof StreakRoute
   '/student-lab': typeof StudentLabRoute
+  '/api/chat': typeof ApiChatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/feed': typeof FeedRoute
+  '/identify': typeof IdentifyRoute
   '/login': typeof LoginRoute
+  '/messages': typeof MessagesRoute
   '/plants': typeof PlantsRoute
   '/publication': typeof PublicationRoute
   '/streak': typeof StreakRoute
   '/student-lab': typeof StudentLabRoute
+  '/api/chat': typeof ApiChatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/admin'
+    | '/feed'
+    | '/identify'
     | '/login'
+    | '/messages'
     | '/plants'
     | '/publication'
     | '/streak'
     | '/student-lab'
+    | '/api/chat'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/admin'
+    | '/feed'
+    | '/identify'
     | '/login'
+    | '/messages'
     | '/plants'
     | '/publication'
     | '/streak'
     | '/student-lab'
+    | '/api/chat'
   id:
     | '__root__'
     | '/'
     | '/admin'
+    | '/feed'
+    | '/identify'
     | '/login'
+    | '/messages'
     | '/plants'
     | '/publication'
     | '/streak'
     | '/student-lab'
+    | '/api/chat'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
+  FeedRoute: typeof FeedRoute
+  IdentifyRoute: typeof IdentifyRoute
   LoginRoute: typeof LoginRoute
+  MessagesRoute: typeof MessagesRoute
   PlantsRoute: typeof PlantsRoute
   PublicationRoute: typeof PublicationRoute
   StreakRoute: typeof StreakRoute
   StudentLabRoute: typeof StudentLabRoute
+  ApiChatRoute: typeof ApiChatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -151,11 +203,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlantsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/messages': {
+      id: '/messages'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof MessagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/identify': {
+      id: '/identify'
+      path: '/identify'
+      fullPath: '/identify'
+      preLoaderRoute: typeof IdentifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/feed': {
+      id: '/feed'
+      path: '/feed'
+      fullPath: '/feed'
+      preLoaderRoute: typeof FeedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -172,17 +245,28 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
+  FeedRoute: FeedRoute,
+  IdentifyRoute: IdentifyRoute,
   LoginRoute: LoginRoute,
+  MessagesRoute: MessagesRoute,
   PlantsRoute: PlantsRoute,
   PublicationRoute: PublicationRoute,
   StreakRoute: StreakRoute,
   StudentLabRoute: StudentLabRoute,
+  ApiChatRoute: ApiChatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
