@@ -306,10 +306,24 @@ function CommentThread({ postId, currentUserId }: { postId: string; currentUserI
     queryFn: async () => {
       const { data } = await supabase
         .from("post_comments")
-        .select("id, body, author_id, created_at, profiles(display_name)")
+        .select("id, body, author_id, created_at")
         .eq("post_id", postId)
         .order("created_at", { ascending: true });
-      return data ?? [];
+      const rows = data ?? [];
+      const ids = Array.from(new Set(rows.map((r) => r.author_id)));
+      let nameMap = new Map<string, string | null>();
+      if (ids.length) {
+        const { data: profs } = await supabase
+          .from("profiles")
+          .select("id, display_name")
+          .in("id", ids);
+        nameMap = new Map((profs ?? []).map((p) => [p.id, p.display_name]));
+      }
+      return rows.map((r) => ({
+        id: r.id,
+        body: r.body,
+        display_name: nameMap.get(r.author_id) ?? null,
+      }));
     },
   });
   const m = useMutation({
@@ -329,11 +343,9 @@ function CommentThread({ postId, currentUserId }: { postId: string; currentUserI
   });
   return (
     <div className="mt-4 pt-4 border-t border-border space-y-3">
-      {q.data?.map((c: { id: string; body: string; profiles?: { display_name: string | null } | null }) => (
+      {q.data?.map((c) => (
         <div key={c.id} className="text-sm">
-          <span className="text-foreground font-medium">
-            {c.profiles?.display_name || "Anon"}:
-          </span>{" "}
+          <span className="text-foreground font-medium">{c.display_name || "Anon"}:</span>{" "}
           <span className="text-muted-foreground">{c.body}</span>
         </div>
       ))}
