@@ -8,6 +8,7 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { SpeedInsights } from "@vercel/speed-insights/react";
+import { ChatBotanist } from "@/components/site/ChatBotanist";
 
 import appCss from "../styles.css?url";
 
@@ -112,6 +113,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <Outlet />
+      <ChatBotanist />
     </QueryClientProvider>
   );
 }
