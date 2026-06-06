@@ -37,6 +37,9 @@ type Post = {
   post_comments: { id: string }[];
 };
 
+// Cast around supabase relationship inference quirks for nested selects.
+type Loose = Record<string, unknown>;
+
 function FeedPage() {
   const { user } = useAuth();
 
@@ -46,13 +49,26 @@ function FeedPage() {
       const { data, error } = await supabase
         .from("posts")
         .select(
-          "id, author_id, body, photo_url, plant_id, lat, lng, created_at, plants(scientific_name, slug), profiles(display_name), post_likes(user_id), post_comments(id)"
+          "id, author_id, body, photo_url, plant_id, lat, lng, created_at, plants(scientific_name, slug), post_likes(user_id), post_comments(id)"
         )
         .eq("hidden", false)
         .order("created_at", { ascending: false })
         .limit(50);
       if (error) throw error;
-      return (data ?? []) as unknown as Post[];
+      const rows = (data ?? []) as unknown as Post[];
+      // Hydrate display_name from profiles separately (no FK join available).
+      const ids = Array.from(new Set(rows.map((r) => r.author_id)));
+      if (ids.length) {
+        const { data: profs } = await supabase
+          .from("profiles")
+          .select("id, display_name")
+          .in("id", ids);
+        const map = new Map((profs ?? []).map((p) => [p.id, p.display_name]));
+        rows.forEach((r) => {
+          r.profiles = { display_name: map.get(r.author_id) ?? null };
+        });
+      }
+      return rows;
     },
     retry: false,
   });
