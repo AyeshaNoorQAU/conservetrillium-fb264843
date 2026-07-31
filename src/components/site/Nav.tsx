@@ -33,11 +33,18 @@ export function Nav() {
   const fetchStreak = useServerFn(getMyStreak);
   const streakQ = useQuery({
     queryKey: ["my-streak"],
-    queryFn: () => fetchStreak(),
+    queryFn: async () => {
+      try {
+        return await fetchStreak();
+      } catch {
+        return null;
+      }
+    },
     enabled: !!user,
     retry: false,
   });
   const streak = streakQ.data?.current ?? 0;
+
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
