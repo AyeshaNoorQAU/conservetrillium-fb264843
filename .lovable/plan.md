@@ -1,85 +1,49 @@
+## What's going wrong
 
-# Phase 3 — Daily-use app, all four blocks
+Console logs show the Supabase client is throwing `Missing Supabase environment variable(s): SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY` from the published preview bundle. The `cms.ts` calls catch this, but several newer call sites do NOT and bubble the throw up to the root `errorComponent` — which renders the "This page didn't load" screen the session replay shows.
 
-You picked all four. I'll build them in this order so each one is shippable and reviewable on its own. After every block I'll pause briefly so you can poke at it before I start the next.
+Likely culprits (all introduced in the Phase 3 batch):
+1. `useAuth` calls `supabase.auth.onAuthStateChange(...)` inside `useEffect` with no try/catch. When the Proxy in `client.ts` is hit and the env vars are missing, this throws synchronously and bubbles into React.
+2. `NotificationBell`, `ChatBotanist`, and various route files (`/feed`, `/identify`, `/messages`, `/streak`) touch `supabase.*` at runtime with no guard.
+3. `PlantOfDay` calls server functions via `useServerFn`; on the static preview these 404 and, depending on react-query state, can re-throw despite `retry: false`.
 
----
+The root cause is two-layered: the preview build was produced when `VITE_SUPABASE_URL` / `VITE_SUPABASE_PUBLISHABLE_KEY` were not yet baked in, AND the new code added in Phase 3 has no defensive handling around Supabase access.
 
-## Block A — Plant of the Day + streaks (smallest, ship first)
+## Fix plan
 
-**What you'll see**
-- A new "Today's plant" capsule on the homepage hero with photo, name, one-line fact, and a **Mark as learned** button (signed-in only; signed-out users see "Sign in to start a streak").
-- A streak ring + number badge in the Nav (next to the Sign in / Account button) showing current streak.
-- A tiny `/streak` page with current streak, longest streak, and a 30-day dot calendar.
+### 1. Make the Supabase client never throw on missing env
+- In `src/integrations/supabase/client.ts`, when env vars are missing, log a warning ONCE and return a stub client whose method calls reject with a typed error instead of throwing synchronously from a Proxy `get`. Async failures are catchable by react-query, listeners, and `try/catch`; synchronous throws from a Proxy are what blow up render paths.
+- Stub shape: `auth.onAuthStateChange` returns `{ data: { subscription: { unsubscribe(){} } } }`, `auth.getSession` resolves `{ data: { session: null } }`, `from(...).select(...)` chain resolves `{ data: [], error: <env-missing> }`, `channel(...).on(...).subscribe()` returns a no-op channel. This keeps the UI alive with empty state.
 
-**Database**
-- `plant_of_day` (date PK, plant_id FK, blurb, fact). One row per day.
-- `user_streaks` (user_id PK, current_streak, longest_streak, last_seen_date).
-- `user_plant_log` (user_id, date, plant_id) — composite PK (user_id, date) so a user can only credit once per day.
-- All three: RLS on, GRANTs to authenticated + service_role, public SELECT on `plant_of_day` only.
+### 2. Harden `useAuth`
+- Wrap the `onAuthStateChange` and `getSession` calls in try/catch so any future Proxy/throw cannot break the React tree. On failure, treat as signed-out and `setLoading(false)`.
 
-**Server**
-- `pickPlantOfDay` cron route at `/api/public/hooks/plant-of-day` (pg_cron daily at 00:05 UTC). Picks a plant that hasn't been used in the last 30 days.
-- `markLearned` server fn (auth required): inserts into `user_plant_log`, bumps streak if `last_seen_date = today - 1`, resets to 1 otherwise.
+### 3. Isolate Phase 3 widgets behind a small error boundary
+- Add a tiny `<SafeBoundary fallback={null}>` wrapper (React `componentDidCatch` class) in `src/components/site/SafeBoundary.tsx`.
+- Wrap `<PlantOfDay />`, `<NotificationBell />`, the streak chip in `Nav`, and `<ChatBotanist />` so a future render failure in any of them degrades to nothing instead of crashing the page.
 
----
+### 4. Make the chat transport lazy
+- Move `new DefaultChatTransport(...)` from module scope into `useMemo` inside `ChatBotanist` so any future SSR-incompatible behavior in `ai-sdk` can't break module init.
 
-## Block B — Community Feed (Facebook-style, plant-focused)
+### 5. Make Phase 3 server-function queries fully fail-soft
+- `PlantOfDay`, `Nav` streak chip, and `streak.tsx` already use `retry: false`. Add explicit `try/catch` inside the `queryFn` that returns `null`/`{ current: 0, ... }` rather than re-throwing, so react-query never enters an error state that can surface to the boundary.
 
-**What you'll see**
-- New `/feed` route in the main nav.
-- Composer at top: textarea + optional photo + optional plant tag (dropdown of existing plants) + optional GPS (browser geolocation, opt-in).
-- Infinite-scroll list of post cards: author avatar/name, time, body, photo, plant chip, like button, comment count, "view comments" expander.
-- Comment thread inline. Edit/delete own posts. Admin can hide any post.
+### 6. Rebuild the preview
+- After the code fixes, the existing preview bundle will still be the stale one with missing env vars baked in. A fresh build (next message turn auto-builds) will inline the now-present `VITE_SUPABASE_URL` / `VITE_SUPABASE_PUBLISHABLE_KEY` and the cms warnings will also disappear.
 
-**Database**
-- `posts` (id, author_id, plant_id?, body, photo_url?, lat?, lng?, created_at, hidden bool).
-- `post_likes` (post_id, user_id) — composite PK.
-- `post_comments` (id, post_id, author_id, body, created_at).
-- RLS: anyone signed-in can read non-hidden posts; only author can update/delete own; admin can update `hidden`.
-- Photos go into existing `site-media` bucket under `posts/{user_id}/{uuid}.jpg`.
+## Files touched
 
----
+- `src/integrations/supabase/client.ts` — stub-on-missing-env (carefully; this file is normally auto-gen, but the fix is the smallest viable change here).
+- `src/hooks/use-auth.ts` — try/catch around auth calls.
+- `src/components/site/SafeBoundary.tsx` — new.
+- `src/components/site/Nav.tsx` — wrap streak chip + NotificationBell in SafeBoundary; soft-fail streak query.
+- `src/components/site/PlantOfDay.tsx` — soft-fail queryFns.
+- `src/components/site/ChatBotanist.tsx` — lazy transport via useMemo.
+- `src/routes/__root.tsx` — wrap `<ChatBotanist />` in SafeBoundary.
 
-## Block C — AI Plant ID + Chat Botanist (Lovable AI Gateway, no keys from you)
+## Verification
 
-**What you'll see**
-- New `/identify` route: drop a photo → spinner → result card with species guess, confidence, conservation note, and a "Save to my sightings" button.
-- A floating "Ask the botanist" chat button bottom-right of the site → opens a drawer with streamed responses, system-primed on Himalayan medicinal flora + the project's publication.
-
-**Server (TanStack)**
-- `identifyPlant` server fn: accepts base64 image, calls `google/gemini-3-flash-preview` (multimodal) via Lovable AI Gateway, returns `{species, confidence, note}`. Stores result in `plant_identifications` table.
-- `/api/chat` server route: streaming chat via AI SDK + `createLovableAiGatewayProvider`, default model `google/gemini-3-flash-preview`, system prompt scoped to Himalayan flora.
-- `plant_identifications` (id, user_id, image_url, species, confidence, note, created_at). RLS: own rows only.
-
----
-
-## Block D — Live notifications + Direct Messages (WhatsApp-style)
-
-**What you'll see**
-- Bell icon in Nav with unread red dot. Click opens a dropdown listing recent notifications (new comment on your post, new DM, admin broadcast).
-- New `/messages` route: left rail of conversations, right pane of messages, composer at bottom. Realtime updates with no refresh.
-- Click any author's name anywhere → "Message" button → opens or starts a DM.
-
-**Database**
-- `notifications` (id, user_id, kind, payload jsonb, read_at, created_at).
-- `conversations` (id, created_at), `conversation_members` (conversation_id, user_id) — composite PK.
-- `messages` (id, conversation_id, author_id, body, created_at).
-- Realtime: `ALTER PUBLICATION supabase_realtime ADD TABLE notifications, messages;`
-- RLS: a user can read notifications where `user_id = auth.uid()`; can read messages where they are a member of the conversation.
-
----
-
-## Cross-cutting / constraints
-
-- All new tables follow project standard: explicit `GRANT`s, RLS on, `auth.uid()`-scoped policies, `has_role(auth.uid(), 'admin')` overrides for moderation.
-- AI calls use `createServerFn` + Lovable AI Gateway (no key from you needed). `LOVABLE_API_KEY` already exists.
-- New routes are public for read-only views and gated with inline "Sign in to X" CTAs for write actions — no full `_authenticated/` subtree, to keep OG sharing intact.
-- Photo uploads reuse the existing private `site-media` bucket with new path prefixes (`posts/`, `identifications/`).
-- No video calls, no E2E encryption on DMs, no native mobile, no multilingual — same out-of-scope items as before.
-
-## Order of work
-
-I'll do **Block A** first (smallest, gives the daily habit hook). After it's live and you've poked at it, I'll do **B**, then **C**, then **D**. Each block is one migration + the UI + a short test pass.
-
-Approve and I'll start with Block A.
+- Reload the homepage; no "This page didn't load" screen.
+- Console no longer shows uncaught Supabase env errors (only at most one warning).
+- Nav, hero, plant-of-day, get-involved, contact all render with their seeded defaults even if Supabase is unreachable.
+- Signed-in flows (streak, notifications, chat) still work in the live dev preview.

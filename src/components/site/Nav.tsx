@@ -6,6 +6,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useAuth } from "@/hooks/use-auth";
 import { getMyStreak } from "@/lib/streaks.functions";
 import { NotificationBell } from "@/components/site/NotificationBell";
+import { SafeBoundary } from "@/components/site/SafeBoundary";
 
 const sectionLinks = [
   { href: "#mission", label: "Mission" },
@@ -32,11 +33,18 @@ export function Nav() {
   const fetchStreak = useServerFn(getMyStreak);
   const streakQ = useQuery({
     queryKey: ["my-streak"],
-    queryFn: () => fetchStreak(),
+    queryFn: async () => {
+      try {
+        return await fetchStreak();
+      } catch {
+        return null;
+      }
+    },
     enabled: !!user,
     retry: false,
   });
   const streak = streakQ.data?.current ?? 0;
+
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -102,7 +110,11 @@ export function Nav() {
               <Flame className="w-3.5 h-3.5" /> {streak}
             </Link>
           )}
-          {user && <NotificationBell opaque={opaque} />}
+          {user && (
+            <SafeBoundary>
+              <NotificationBell opaque={opaque} />
+            </SafeBoundary>
+          )}
           <Link
             to={user ? "/admin" : "/login"}
             className={`hidden md:inline-flex items-center gap-2 px-4 py-2 text-sm rounded-full transition-all ${

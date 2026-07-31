@@ -12,6 +12,7 @@ import { GetInvolved } from "@/components/site/GetInvolved";
 import { PlantOfDay } from "@/components/site/PlantOfDay";
 import { Contact } from "@/components/site/Contact";
 import { Footer } from "@/components/site/Footer";
+import { SafeBoundary } from "@/components/site/SafeBoundary";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -41,13 +42,17 @@ function Index() {
       <Nav />
       <main>
         <Hero />
-        <PlantOfDay />
+        <SafeBoundary>
+          <PlantOfDay />
+        </SafeBoundary>
         <Mission />
         <Plant />
         <Impact />
         <Field />
         <Science />
-        <Announcements />
+        <SafeBoundary>
+          <Announcements />
+        </SafeBoundary>
         <Team />
         <GetInvolved />
         <Contact />

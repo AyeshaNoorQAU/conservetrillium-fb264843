@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-router";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import { ChatBotanist } from "@/components/site/ChatBotanist";
+import { SafeBoundary } from "@/components/site/SafeBoundary";
 
 import appCss from "../styles.css?url";
 
@@ -113,7 +114,10 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <Outlet />
-      <ChatBotanist />
+      <SafeBoundary>
+        <ChatBotanist />
+      </SafeBoundary>
     </QueryClientProvider>
+
   );
 }

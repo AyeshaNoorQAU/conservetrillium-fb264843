@@ -1,13 +1,12 @@
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { MessageSquare, X, Send, Loader2 } from "lucide-react";
-
-const transport = new DefaultChatTransport({ api: "/api/chat" });
 
 export function ChatBotanist() {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
+  const transport = useMemo(() => new DefaultChatTransport({ api: "/api/chat" }), []);
   const { messages, sendMessage, status } = useChat({ transport });
 
   const busy = status === "submitted" || status === "streaming";

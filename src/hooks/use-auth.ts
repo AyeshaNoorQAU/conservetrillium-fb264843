@@ -9,32 +9,48 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const { data: sub } = supabase.auth.onAuthStateChange((_evt, s) => {
-      setSession(s);
-      setUser(s?.user ?? null);
+    let unsubscribe = () => {};
+    try {
+      const { data: sub } = supabase.auth.onAuthStateChange((_evt, s) => {
+        setSession(s);
+        setUser(s?.user ?? null);
+        setLoading(false);
+        if (s?.user) {
+          // Defer role lookup to avoid deadlock inside the listener
+          setTimeout(async () => {
+            try {
+              const { data } = await supabase
+                .from("user_roles")
+                .select("role")
+                .eq("user_id", s.user.id)
+                .eq("role", "admin")
+                .maybeSingle();
+              setIsAdmin(!!data);
+            } catch {
+              setIsAdmin(false);
+            }
+          }, 0);
+        } else {
+          setIsAdmin(false);
+        }
+      });
+      unsubscribe = () => sub.subscription.unsubscribe();
+
+      supabase.auth
+        .getSession()
+        .then(({ data }) => {
+          setSession(data.session);
+          setUser(data.session?.user ?? null);
+          setLoading(false);
+        })
+        .catch(() => setLoading(false));
+    } catch (err) {
+      console.warn("[auth] unavailable; continuing signed out.", err);
       setLoading(false);
-      if (s?.user) {
-        // Defer role lookup to avoid deadlock inside the listener
-        setTimeout(async () => {
-          const { data } = await supabase
-            .from("user_roles")
-            .select("role")
-            .eq("user_id", s.user.id)
-            .eq("role", "admin")
-            .maybeSingle();
-          setIsAdmin(!!data);
-        }, 0);
-      } else {
-        setIsAdmin(false);
-      }
-    });
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session);
-      setUser(data.session?.user ?? null);
-      setLoading(false);
-    });
-    return () => sub.subscription.unsubscribe();
+    }
+    return () => unsubscribe();
   }, []);
+
 
   return { session, user, isAdmin, loading };
 }
