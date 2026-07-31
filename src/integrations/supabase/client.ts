@@ -2,7 +2,7 @@
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "./types";
 
-type Client = ReturnType<typeof createRealClient>;
+type Client = NonNullable<ReturnType<typeof createRealClient>>;
 
 function createRealClient() {
   // Use import.meta.env for client-side (Vite build-time replacement)
