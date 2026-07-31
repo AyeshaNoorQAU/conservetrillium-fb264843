@@ -14,13 +14,25 @@ export function PlantOfDay() {
 
   const podQ = useQuery({
     queryKey: ["plant-of-day"],
-    queryFn: () => fetchPod(),
+    queryFn: async () => {
+      try {
+        return await fetchPod();
+      } catch {
+        return null;
+      }
+    },
     retry: false,
   });
 
   const streakQ = useQuery({
     queryKey: ["my-streak"],
-    queryFn: () => fetchStreak(),
+    queryFn: async () => {
+      try {
+        return await fetchStreak();
+      } catch {
+        return null;
+      }
+    },
     enabled: !!user,
     retry: false,
   });
