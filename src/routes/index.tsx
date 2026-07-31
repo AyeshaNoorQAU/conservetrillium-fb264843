@@ -42,13 +42,17 @@ function Index() {
       <Nav />
       <main>
         <Hero />
-        <PlantOfDay />
+        <SafeBoundary>
+          <PlantOfDay />
+        </SafeBoundary>
         <Mission />
         <Plant />
         <Impact />
         <Field />
         <Science />
-        <Announcements />
+        <SafeBoundary>
+          <Announcements />
+        </SafeBoundary>
         <Team />
         <GetInvolved />
         <Contact />
