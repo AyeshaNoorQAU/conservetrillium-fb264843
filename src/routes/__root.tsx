@@ -114,7 +114,10 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <Outlet />
-      <ChatBotanist />
+      <SafeBoundary>
+        <ChatBotanist />
+      </SafeBoundary>
     </QueryClientProvider>
+
   );
 }
