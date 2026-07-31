@@ -110,7 +110,11 @@ export function Nav() {
               <Flame className="w-3.5 h-3.5" /> {streak}
             </Link>
           )}
-          {user && <NotificationBell opaque={opaque} />}
+          {user && (
+            <SafeBoundary>
+              <NotificationBell opaque={opaque} />
+            </SafeBoundary>
+          )}
           <Link
             to={user ? "/admin" : "/login"}
             className={`hidden md:inline-flex items-center gap-2 px-4 py-2 text-sm rounded-full transition-all ${
