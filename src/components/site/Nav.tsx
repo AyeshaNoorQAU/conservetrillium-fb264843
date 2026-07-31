@@ -6,6 +6,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useAuth } from "@/hooks/use-auth";
 import { getMyStreak } from "@/lib/streaks.functions";
 import { NotificationBell } from "@/components/site/NotificationBell";
+import { SafeBoundary } from "@/components/site/SafeBoundary";
 
 const sectionLinks = [
   { href: "#mission", label: "Mission" },
