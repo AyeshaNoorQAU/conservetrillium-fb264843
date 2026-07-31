@@ -2,22 +2,16 @@
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "./types";
 
-function createSupabaseClient() {
+type Client = ReturnType<typeof createRealClient>;
+
+function createRealClient() {
   // Use import.meta.env for client-side (Vite build-time replacement)
   // Fall back to process.env for SSR (server-side rendering)
   const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
   const SUPABASE_PUBLISHABLE_KEY =
     import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_PUBLISHABLE_KEY;
 
-  if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
-    const missing = [
-      ...(!SUPABASE_URL ? ["SUPABASE_URL"] : []),
-      ...(!SUPABASE_PUBLISHABLE_KEY ? ["SUPABASE_PUBLISHABLE_KEY"] : []),
-    ];
-    const message = `Missing Supabase environment variable(s): ${missing.join(", ")}. Connect Supabase in Lovable Cloud.`;
-    console.error(`[Supabase] ${message}`);
-    throw new Error(message);
-  }
+  if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) return null;
 
   return createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
     auth: {
@@ -28,13 +22,113 @@ function createSupabaseClient() {
   });
 }
 
-let _supabase: ReturnType<typeof createSupabaseClient> | undefined;
+const OFFLINE_MESSAGE =
+  "Supabase is not configured (missing SUPABASE_URL / SUPABASE_PUBLISHABLE_KEY). Running in offline mode.";
+
+let warned = false;
+function warnOnce() {
+  if (warned) return;
+  warned = true;
+  console.warn(`[Supabase] ${OFFLINE_MESSAGE}`);
+}
+
+function offlineError() {
+  return { message: OFFLINE_MESSAGE, code: "supabase_unconfigured" };
+}
+
+/**
+ * A stub that never throws synchronously. Every terminal call resolves with
+ * `{ data: null/[], error }` so callers (react-query, effects, awaits) can
+ * handle it as a normal failure instead of crashing the React tree.
+ */
+function createOfflineClient(): Client {
+  const noopSubscription = { unsubscribe() {} };
+
+  const queryResult = {
+    data: null as unknown,
+    error: offlineError(),
+    count: null,
+    status: 503,
+    statusText: "Service Unavailable",
+  };
+
+  // A thenable chain: any method returns itself, awaiting it resolves to the result.
+  const makeChain = (): unknown =>
+    new Proxy(function () {} as unknown as object, {
+      get(_t, prop) {
+        if (prop === "then") {
+          return (resolve: (v: unknown) => unknown) => Promise.resolve(resolve(queryResult));
+        }
+        if (prop === "catch" || prop === "finally") {
+          return () => makeChain();
+        }
+        return () => makeChain();
+      },
+      apply() {
+        return makeChain();
+      },
+    });
+
+  const channel: Record<string, unknown> = {};
+  channel.on = () => channel;
+  channel.subscribe = () => channel;
+  channel.unsubscribe = () => Promise.resolve("ok");
+  channel.send = () => Promise.resolve("ok");
+
+  const auth = {
+    onAuthStateChange: () => ({ data: { subscription: noopSubscription } }),
+    getSession: async () => ({ data: { session: null }, error: null }),
+    getUser: async () => ({ data: { user: null }, error: offlineError() }),
+    signInWithOtp: async () => ({ data: null, error: offlineError() }),
+    signInWithPassword: async () => ({ data: null, error: offlineError() }),
+    signInWithOAuth: async () => ({ data: null, error: offlineError() }),
+    signOut: async () => ({ error: null }),
+    updateUser: async () => ({ data: { user: null }, error: offlineError() }),
+    exchangeCodeForSession: async () => ({ data: null, error: offlineError() }),
+  };
+
+  const storageBucket = {
+    upload: async () => ({ data: null, error: offlineError() }),
+    download: async () => ({ data: null, error: offlineError() }),
+    remove: async () => ({ data: null, error: offlineError() }),
+    list: async () => ({ data: [], error: offlineError() }),
+    createSignedUrl: async () => ({ data: null, error: offlineError() }),
+    getPublicUrl: () => ({ data: { publicUrl: "" } }),
+  };
+
+  const stub: Record<string, unknown> = {
+    auth,
+    from: () => makeChain(),
+    rpc: () => makeChain(),
+    channel: () => channel,
+    removeChannel: () => Promise.resolve("ok"),
+    getChannels: () => [],
+    storage: { from: () => storageBucket },
+    functions: { invoke: async () => ({ data: null, error: offlineError() }) },
+  };
+
+  return stub as unknown as Client;
+}
+
+let _supabase: Client | undefined;
+
+function resolveClient(): Client {
+  if (!_supabase) {
+    const real = createRealClient();
+    if (real) {
+      _supabase = real;
+    } else {
+      warnOnce();
+      _supabase = createOfflineClient();
+    }
+  }
+  return _supabase;
+}
 
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
-export const supabase = new Proxy({} as ReturnType<typeof createSupabaseClient>, {
+export const supabase = new Proxy({} as Client, {
   get(_, prop, receiver) {
-    if (!_supabase) _supabase = createSupabaseClient();
-    return Reflect.get(_supabase, prop, receiver);
+    return Reflect.get(resolveClient(), prop, receiver);
   },
 });
