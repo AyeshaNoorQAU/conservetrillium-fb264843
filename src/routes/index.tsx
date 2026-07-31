@@ -12,6 +12,7 @@ import { GetInvolved } from "@/components/site/GetInvolved";
 import { PlantOfDay } from "@/components/site/PlantOfDay";
 import { Contact } from "@/components/site/Contact";
 import { Footer } from "@/components/site/Footer";
+import { SafeBoundary } from "@/components/site/SafeBoundary";
 
 export const Route = createFileRoute("/")({
   head: () => ({
